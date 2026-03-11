@@ -6,7 +6,10 @@ import { InputText } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { User } from '../../core/models/user.model';
 import { Address } from '../../core/models/address.model';
+import { Car } from '../../core/models/car.model';
 import { AddressControlComponent } from '../adress-control/address-control.component';
+import { CarSelectControlComponent } from '../car-select-control/car-select-control.component';
+import { GenderSelectControlComponent } from '../gender-select-control/gender-select-control.component';
 import { ProfessionSelectControlComponent } from '../profession-select-control/profession-select-control.component';
 
 /** Composant de formulaire reactif pour creation et edition d'utilisateur. */
@@ -19,6 +22,8 @@ import { ProfessionSelectControlComponent } from '../profession-select-control/p
 		PasswordModule,
 		ButtonDirective,
 		AddressControlComponent,
+		CarSelectControlComponent,
+		GenderSelectControlComponent,
 		ProfessionSelectControlComponent,
 	],
 	templateUrl: './user-form.component.html',
@@ -43,8 +48,15 @@ export class UserFormComponent implements OnChanges {
 			nonNullable: true,
 			validators: [Validators.required, Validators.minLength(8)],
 		}),
+		gender: new FormControl('', {
+			nonNullable: true,
+			validators: [Validators.required],
+		}),
 		profession: new FormControl('', {
 			nonNullable: true,
+			validators: [Validators.required],
+		}),
+		car: new FormControl<Car | null>(null, {
 			validators: [Validators.required],
 		}),
 		address: new FormControl(
@@ -67,7 +79,9 @@ export class UserFormComponent implements OnChanges {
 				firstName: this.selectedUser.firstName,
 				lastName: this.selectedUser.lastName,
 				email: this.selectedUser.email,
+				gender: this.selectedUser.gender,
 				profession: this.selectedUser.profession,
+				car: this.selectedUser.car,
 				password: this.selectedUser.password ?? '',
 				address: this.selectedUser.address,
 			});
@@ -79,7 +93,9 @@ export class UserFormComponent implements OnChanges {
 				firstName: '',
 				lastName: '',
 				email: '',
+				gender: '',
 				profession: '',
+				car: null,
 				password: '',
 				address: { street: '', city: '', postalCode: '', country: '' },
 			});
@@ -108,13 +124,18 @@ export class UserFormComponent implements OnChanges {
 			value.address.postalCode,
 			value.address.country,
 		);
+		if (!value.car) {
+			return;
+		}
 
 		const user = new User(
 			this.selectedUser?.id ?? 0,
 			value.firstName,
 			value.lastName,
 			value.email,
+			value.gender,
 			value.profession,
+			value.car,
 			resolvedPassword,
 			address,
 		);
@@ -133,7 +154,9 @@ export class UserFormComponent implements OnChanges {
 			firstName: '',
 			lastName: '',
 			email: '',
+			gender: '',
 			profession: '',
+			car: null,
 			password: '',
 			address: { street: '', city: '', postalCode: '', country: '' },
 		});

@@ -32,6 +32,7 @@ export interface RandomUserLocationDto {
 
 /** DTO utilisateur renvoye par randomuser.me. */
 export interface UserApiDto {
+	gender: string;
 	id: RandomUserIdDto;
 	login: RandomUserLoginDto;
 	name: RandomUserNameDto;

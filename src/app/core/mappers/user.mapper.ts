@@ -1,4 +1,6 @@
 import { UserApiDto } from '../dto/user-api.dto';
+import { CarBrand } from '../models/car-brand.model';
+import { Car } from '../models/car.model';
 import { User } from '../models/user.model';
 
 /** Mapper entre le DTO distant et l'entite domaine User. */
@@ -19,7 +21,9 @@ export class UserMapper {
 			firstName: dto.name.first,
 			lastName: dto.name.last,
 			email: dto.email,
+			gender: dto.gender,
 			profession: 'dev_web',
+			car: new Car(new CarBrand('Peugeot'), '208', 'Essence', 2022),
 			password: dto.login.password,
 			address: {
 				street: `${dto.location.street.number} ${dto.location.street.name}`.trim(),

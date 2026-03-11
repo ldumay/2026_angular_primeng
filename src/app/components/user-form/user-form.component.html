@@ -44,15 +44,31 @@
 
 	<div class="field">
 		<label for="profession">Profession</label>
-		<app-profession-select-control formControlName="profession" />
+		<app-profession-select-control formControlName="profession"></app-profession-select-control>
 		@if (form.controls.profession.touched && form.controls.profession.hasError('required')) {
 			<small class="error">La profession est obligatoire.</small>
 		}
 	</div>
 
 	<div class="field">
+		<label for="gender">Genre</label>
+		<app-gender-select-control formControlName="gender"></app-gender-select-control>
+		@if (form.controls.gender.touched && form.controls.gender.hasError('required')) {
+			<small class="error">Le genre est obligatoire.</small>
+		}
+	</div>
+
+	<div class="field">
+		<label for="car">Voiture</label>
+		<app-car-select-control formControlName="car"></app-car-select-control>
+		@if (form.controls.car.touched && form.controls.car.hasError('required')) {
+			<small class="error">La voiture est obligatoire.</small>
+		}
+	</div>
+
+	<div class="field">
 		<label>Adresse</label>
-		<app-address-control formControlName="address" />
+		<app-address-control formControlName="address"></app-address-control>
 	</div>
 
 	<div class="actions">

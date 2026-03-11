@@ -11,7 +11,7 @@ L'idée principale du projet de test est sourcée dans le fichier `Rz_Docs_1_Cha
 Une documentation technique detaillee du projet est disponible ici :
 
 - architecture globale : `docs/architecture-et-mecaniques.md`
-- reactive forms et cva (adresse + profession) : `docs/reactive-forms-et-cva.md`
+- reactive forms et cva (adresse + profession + genre + voiture) : `docs/reactive-forms-et-cva.md`
 
 ## API REST :
 

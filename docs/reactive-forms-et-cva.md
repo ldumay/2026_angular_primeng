@@ -1,7 +1,7 @@
 # Documentation technique - Reactive Forms et ControlValueAccessor (CVA)
 
 ## 1) Objectif
-Ce document explique le fonctionnement des formulaires reactifs dans le projet, ainsi que l'integration du composant d'adresse base sur `ControlValueAccessor`.
+Ce document explique le fonctionnement des formulaires reactifs dans le projet, ainsi que l'integration des composants CVA (adresse, profession, genre et voiture).
 
 Il est complementaire a :
 - `docs/architecture-et-mecaniques.md`
@@ -17,19 +17,30 @@ Le controle d'adresse reutilisable est porte par :
 Le controle de profession reutilisable est porte par :
 - `src/app/components/profession-select-control/profession-select-control.component.ts`
 
+Le controle de genre reutilisable est porte par :
+- `src/app/components/gender-select-control/gender-select-control.component.ts`
+
+Le controle de voiture reutilisable est porte par :
+- `src/app/components/car-select-control/car-select-control.component.ts`
+
 La source de donnees mockees des professions est :
 - `src/app/core/services/profession-mock.service.ts`
+
+La source de donnees mockees des voitures est :
+- `src/app/core/services/car-mock.service.ts`
 
 La page qui orchestre l'ensemble est :
 - `src/app/views/users-pages/users-page.component.ts`
 
 ## 3) Structure du Reactive Form
-`UserFormComponent` declare un `FormGroup` avec 6 controles :
+`UserFormComponent` declare un `FormGroup` avec 8 controles :
 - `firstName` : `required`
 - `lastName` : `required`
 - `email` : `required` + `email`
 - `password` : `required` + `minLength(8)` en creation
 - `profession` : `required` (valeur issue du composant PrimeNG `p-select` via CVA)
+- `gender` : `required` (valeur issue du composant CVA genre)
+- `car` : `required` (instance `Car` issue du composant CVA voiture)
 - `address` : objet adresse (alimente via le CVA)
 
 Extrait logique (niveau conceptuel) :
@@ -106,23 +117,43 @@ Source des options :
 Utilisation :
 - integre dans le formulaire parent via `formControlName="profession"`
 
-## 9) Flux complet des donnees formulaire
+## 9) Focus sur le CVA de genre
+Le composant `GenderSelectControlComponent` implemente `ControlValueAccessor` pour encapsuler un select PrimeNG de genre.
+
+Utilisation :
+- integre dans le formulaire parent via `formControlName="gender"`
+
+## 10) Focus sur le CVA de voiture
+Le composant `CarSelectControlComponent` implemente `ControlValueAccessor` pour encapsuler un select PrimeNG de voiture.
+
+Particularites :
+- la valeur du controle est un objet `Car` (`brand`, `model`, `motorization`, `year`)
+- l'affichage utilise `toString()` via la propriete `displayName`
+
+Utilisation :
+- integre dans le formulaire parent via `formControlName="car"`
+
+## 11) Flux complet des donnees formulaire
 1. L'utilisateur tape dans `UserFormComponent`.
 2. Les controles Angular mettent a jour la valeur et la validite.
 3. Pour `profession`, `ProfessionSelectControlComponent` propage la valeur code via `onChange`.
-4. Pour `address`, `AddressControlComponent` propage la valeur via `onChange`.
-5. `submit()` construit un `User` (avec `profession` et `Address`) et emet `create` ou `update`.
-6. `UsersPageComponent` relaye vers `UsersFacade`.
-7. `UsersFacade` met a jour les signals -> la liste se rafraichit.
+4. Pour `gender`, `GenderSelectControlComponent` propage la valeur code via `onChange`.
+5. Pour `car`, `CarSelectControlComponent` propage l'instance `Car` via `onChange`.
+6. Pour `address`, `AddressControlComponent` propage la valeur via `onChange`.
+7. `submit()` construit un `User` (avec `profession`, `gender`, `car` et `Address`) et emet `create` ou `update`.
+8. `UsersPageComponent` relaye vers `UsersFacade`.
+9. `UsersFacade` met a jour les signals -> la liste se rafraichit.
 
-## 10) Bonnes pratiques deja appliquees
+## 12) Bonnes pratiques deja appliquees
 - separation nette entre presentation (`components/`) et etat metier (`states/`)
 - formulaire type et centralise
 - changement dynamique des validateurs selon le mode creation/edition
 - composant adresse reutilisable, encapsule et branchable par `formControlName`
 - composant profession reutilisable, encapsule et alimente par un service dedie
+- composant genre reutilisable pour normaliser une valeur API disponible (`male`/`female`)
+- composant voiture reutilisable alimente par un service mock et base sur une classe metier
 
-## 11) Limites actuelles et ameliorations recommandees
+## 13) Limites actuelles et ameliorations recommandees
 - `registerOnTouched` est prepare mais pas encore declenche sur `blur` des inputs adresse.
 - validations adresse minimales : pas de validateurs specifiques (`required`, format code postal, etc.).
 - pas de messages d'erreur dedies pour les champs d'adresse.
@@ -132,12 +163,18 @@ Pistes d'amelioration :
 - ajouter des validateurs sur les champs adresse
 - exposer les erreurs adresse dans le template parent pour un retour utilisateur plus explicite
 - remplacer les donnees mockees des professions par une API reelle si besoin metier
+- remplacer les donnees mockees des voitures par une API reelle si besoin metier
 
-## 12) References rapides
+## 14) References rapides
 - `src/app/components/user-form/user-form.component.ts`
 - `src/app/components/user-form/user-form.component.html`
 - `src/app/components/adress-control/address-control.component.ts`
 - `src/app/components/profession-select-control/profession-select-control.component.ts`
 - `src/app/core/services/profession-mock.service.ts`
+- `src/app/components/gender-select-control/gender-select-control.component.ts`
+- `src/app/components/car-select-control/car-select-control.component.ts`
+- `src/app/core/services/car-mock.service.ts`
+- `src/app/core/models/car.model.ts`
+- `src/app/core/models/car-brand.model.ts`
 - `src/app/views/users-pages/users-page.component.ts`
 - `src/app/states/users.facade.ts`

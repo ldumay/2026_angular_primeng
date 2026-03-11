@@ -1,0 +1,13 @@
+<p-select
+	class="w-full"
+	[options]="options"
+	[ngModel]="value"
+	[disabled]="disabled"
+	optionLabel="label"
+	optionValue="code"
+	placeholder="Selectionner un genre"
+	appendTo="body"
+	(onChange)="onSelectionChange($event)"
+	(onBlur)="handleBlur()"
+	ariaLabel="Genre"
+/>

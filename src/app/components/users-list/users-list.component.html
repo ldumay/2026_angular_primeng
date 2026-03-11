@@ -21,11 +21,11 @@
 		#table
 		[value]="users"
 		[paginator]="true"
-		[rows]="5"
+		[rows]="10"
 		[rowsPerPageOptions]="[5, 10, 20, 50]"
 		[showCurrentPageReport]="true"
 		currentPageReportTemplate="Affichage {first} a {last} sur {totalRecords} utilisateurs"
-		[globalFilterFields]="['firstName', 'lastName']"
+		[globalFilterFields]="['firstName', 'lastName', 'email', 'gender']"
 		sortMode="multiple"
 		dataKey="id"
 		responsiveLayout="scroll"
@@ -35,6 +35,8 @@
 			<tr>
 				<th pSortableColumn="lastName">Nom <p-sortIcon field="lastName" /></th>
 				<th pSortableColumn="firstName">Prenom <p-sortIcon field="firstName" /></th>
+				<th pSortableColumn="gender">Genre <p-sortIcon field="gender" /></th>
+				<th>Voiture</th>
 				<th>Actions</th>
 			</tr>
 		</ng-template>
@@ -42,6 +44,7 @@
 			<tr>
 				<td>{{ user.lastName }}</td>
 				<td>{{ user.firstName }}</td>
+				<td>{{ user.gender }}</td>
 				<td class="actions">
 					<button
 						pButton

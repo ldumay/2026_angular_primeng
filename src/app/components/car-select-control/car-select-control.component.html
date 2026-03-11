@@ -1,0 +1,13 @@
+<p-select
+	class="w-full"
+	[options]="(cars$ | async) ?? []"
+	[ngModel]="value"
+	[disabled]="disabled"
+	optionLabel="displayName"
+	placeholder="Selectionner une voiture"
+	appendTo="body"
+	dataKey="key"
+	(onChange)="onSelectionChange($event)"
+	(onBlur)="handleBlur()"
+	ariaLabel="Voiture"
+/>
