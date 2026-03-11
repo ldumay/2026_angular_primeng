@@ -1,13 +1,16 @@
-<p-select
-	class="profession-select"
-	[options]="(professions$ | async) ?? []"
-	[ngModel]="value"
-	[disabled]="disabled"
-	optionLabel="label"
-	optionValue="code"
-	placeholder="Selectionner une profession"
-	appendTo="body"
-	(onChange)="onSelectionChange($event)"
-	(onBlur)="handleBlur()"
-	ariaLabel="Profession"
-/>
+<p-floatlabel variant="on">
+	<p-select
+		class="profession-select"
+		[inputId]="inputId"
+		[options]="(professions$ | async) ?? []"
+		[ngModel]="value"
+		[disabled]="disabled"
+		optionLabel="label"
+		optionValue="code"
+		appendTo="body"
+		(onChange)="onSelectionChange($event)"
+		(onBlur)="handleBlur()"
+		[ariaLabel]="label"
+	/>
+	<label [for]="inputId">{{ label }}</label>
+</p-floatlabel>

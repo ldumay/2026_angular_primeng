@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, forwardRef } from '@angular/core';
+import { Component, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { FloatLabelModule } from 'primeng/floatlabel';
 import { SelectChangeEvent, SelectModule } from 'primeng/select';
 
 interface GenderOption {
@@ -11,7 +12,7 @@ interface GenderOption {
 /** Selecteur de genre reutilisable en CVA pour Reactive Forms. */
 @Component({
 	selector: 'app-gender-select-control',
-	imports: [CommonModule, FormsModule, SelectModule],
+	imports: [CommonModule, FormsModule, SelectModule, FloatLabelModule],
 	templateUrl: './gender-select-control.component.html',
 	styleUrl: './gender-select-control.component.scss',
 	providers: [
@@ -23,6 +24,9 @@ interface GenderOption {
 	],
 })
 export class GenderSelectControlComponent implements ControlValueAccessor {
+	@Input() label = 'Genre';
+	@Input() inputId = 'gender';
+
 	readonly options: GenderOption[] = [
 		{ code: 'male', label: 'Homme' },
 		{ code: 'female', label: 'Femme' },

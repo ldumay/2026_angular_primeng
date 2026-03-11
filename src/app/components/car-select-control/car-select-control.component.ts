@@ -1,6 +1,7 @@
 import { AsyncPipe, CommonModule } from '@angular/common';
-import { Component, forwardRef, inject } from '@angular/core';
+import { Component, forwardRef, inject, Input } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { FloatLabelModule } from 'primeng/floatlabel';
 import { SelectChangeEvent, SelectModule } from 'primeng/select';
 import { Car } from '../../core/models/car.model';
 import { CarMockService } from '../../core/services/car-mock.service';
@@ -8,7 +9,7 @@ import { CarMockService } from '../../core/services/car-mock.service';
 /** Selecteur de voiture reutilisable en CVA pour Reactive Forms. */
 @Component({
 	selector: 'app-car-select-control',
-	imports: [CommonModule, AsyncPipe, FormsModule, SelectModule],
+	imports: [CommonModule, AsyncPipe, FormsModule, SelectModule, FloatLabelModule],
 	templateUrl: './car-select-control.component.html',
 	styleUrl: './car-select-control.component.scss',
 	providers: [
@@ -20,6 +21,9 @@ import { CarMockService } from '../../core/services/car-mock.service';
 	],
 })
 export class CarSelectControlComponent implements ControlValueAccessor {
+	@Input() label = 'Voiture';
+	@Input() inputId = 'car';
+
 	private readonly carService = inject(CarMockService);
 
 	readonly cars$ = this.carService.listCars();

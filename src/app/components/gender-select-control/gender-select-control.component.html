@@ -1,13 +1,16 @@
-<p-select
-	class="w-full"
-	[options]="options"
-	[ngModel]="value"
-	[disabled]="disabled"
-	optionLabel="label"
-	optionValue="code"
-	placeholder="Selectionner un genre"
-	appendTo="body"
-	(onChange)="onSelectionChange($event)"
-	(onBlur)="handleBlur()"
-	ariaLabel="Genre"
-/>
+<p-floatlabel variant="on">
+	<p-select
+		class="w-full"
+		[inputId]="inputId"
+		[options]="options"
+		[ngModel]="value"
+		[disabled]="disabled"
+		optionLabel="label"
+		optionValue="code"
+		appendTo="body"
+		(onChange)="onSelectionChange($event)"
+		(onBlur)="handleBlur()"
+		[ariaLabel]="label"
+	/>
+	<label [for]="inputId">{{ label }}</label>
+</p-floatlabel>

@@ -54,10 +54,11 @@
 			</div>
 
 			<div class="field">
-				<p-floatlabel variant="on">
-					<app-profession-select-control formControlName="profession"></app-profession-select-control>
-					<label for="profession">Profession</label>
-				</p-floatlabel>
+				<app-profession-select-control
+					formControlName="profession"
+					inputId="profession"
+					label="Profession"
+				></app-profession-select-control>
 				@if (form.controls.profession.touched && form.controls.profession.hasError('required')) {
 					<small class="error">La profession est obligatoire.</small>
 				}
@@ -66,20 +67,22 @@
 
 		<div class="column right">
 			<div class="field">
-				<p-floatlabel variant="on">
-					<app-gender-select-control formControlName="gender"></app-gender-select-control>
-					<label for="gender">Genre</label>
-				</p-floatlabel>
+				<app-gender-select-control
+					formControlName="gender"
+					inputId="gender"
+					label="Genre"
+				></app-gender-select-control>
 				@if (form.controls.gender.touched && form.controls.gender.hasError('required')) {
 					<small class="error">Le genre est obligatoire.</small>
 				}
 			</div>
 
 			<div class="field">
-				<p-floatlabel variant="on">
-					<app-car-select-control formControlName="car"></app-car-select-control>
-					<label for="car">Voiture</label>
-				</p-floatlabel>
+				<app-car-select-control
+					formControlName="car"
+					inputId="car"
+					label="Voiture"
+				></app-car-select-control>
 				@if (form.controls.car.touched && form.controls.car.hasError('required')) {
 					<small class="error">La voiture est obligatoire.</small>
 				}

@@ -1,13 +1,16 @@
-<p-select
-	class="w-full"
-	[options]="(cars$ | async) ?? []"
-	[ngModel]="value"
-	[disabled]="disabled"
-	optionLabel="displayName"
-	placeholder="Selectionner une voiture"
-	appendTo="body"
-	dataKey="key"
-	(onChange)="onSelectionChange($event)"
-	(onBlur)="handleBlur()"
-	ariaLabel="Voiture"
-/>
+<p-floatlabel variant="on">
+	<p-select
+		class="w-full"
+		[inputId]="inputId"
+		[options]="(cars$ | async) ?? []"
+		[ngModel]="value"
+		[disabled]="disabled"
+		optionLabel="displayName"
+		appendTo="body"
+		dataKey="key"
+		(onChange)="onSelectionChange($event)"
+		(onBlur)="handleBlur()"
+		[ariaLabel]="label"
+	/>
+	<label [for]="inputId">{{ label }}</label>
+</p-floatlabel>

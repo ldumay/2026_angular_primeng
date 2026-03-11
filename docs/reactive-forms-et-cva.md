@@ -5,6 +5,7 @@ Ce document explique le fonctionnement des formulaires reactifs dans le projet, 
 
 Il est complementaire a :
 - `docs/architecture-et-mecaniques.md`
+- `docs/troubleshooting.md`
 
 ## 2) Ou se situe le formulaire dans l'application
 Le formulaire utilisateur est porte par :

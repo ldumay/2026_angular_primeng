@@ -1,7 +1,8 @@
 import { AsyncPipe, CommonModule } from '@angular/common';
-import { Component, forwardRef, inject } from '@angular/core';
+import { Component, forwardRef, inject, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { FloatLabelModule } from 'primeng/floatlabel';
 import { SelectChangeEvent, SelectModule } from 'primeng/select';
 import { ProfessionMockService } from '../../core/services/profession-mock.service';
 
@@ -11,7 +12,7 @@ import { ProfessionMockService } from '../../core/services/profession-mock.servi
  */
 @Component({
 	selector: 'app-profession-select-control',
-	imports: [CommonModule, AsyncPipe, FormsModule, SelectModule],
+	imports: [CommonModule, AsyncPipe, FormsModule, SelectModule, FloatLabelModule],
 	templateUrl: './profession-select-control.component.html',
 	styleUrl: './profession-select-control.component.scss',
 	providers: [
@@ -23,6 +24,9 @@ import { ProfessionMockService } from '../../core/services/profession-mock.servi
 	],
 })
 export class ProfessionSelectControlComponent implements ControlValueAccessor {
+	@Input() label = 'Profession';
+	@Input() inputId = 'profession';
+
 	private readonly professionService = inject(ProfessionMockService);
 
 	readonly professions$ = this.professionService.listProfessions();

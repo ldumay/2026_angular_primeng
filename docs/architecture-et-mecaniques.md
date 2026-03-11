@@ -2,6 +2,7 @@
 
 ## Liens de documentation associee
 - Reactive Forms et CVA : `docs/reactive-forms-et-cva.md`
+- Troubleshooting : `docs/troubleshooting.md`
 
 ## 1) Objectif de cette documentation
 Ce document decrit de maniere simple et detaillee les outils, couches techniques et flux de donnees utilises dans le projet Angular 21 + PrimeNG 21.

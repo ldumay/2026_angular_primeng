@@ -12,6 +12,7 @@ Une documentation technique detaillee du projet est disponible ici :
 
 - architecture globale : `docs/architecture-et-mecaniques.md`
 - reactive forms et cva (adresse + profession + genre + voiture) : `docs/reactive-forms-et-cva.md`
+- troubleshooting (problemes rencontres et correctifs) : `docs/troubleshooting.md`
 
 ## API REST :
 
