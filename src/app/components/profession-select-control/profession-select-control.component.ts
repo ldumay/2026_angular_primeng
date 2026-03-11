@@ -1,6 +1,8 @@
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { Component, forwardRef, inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { SelectChangeEvent, SelectModule } from 'primeng/select';
 import { ProfessionMockService } from '../../core/services/profession-mock.service';
 
 /**
@@ -9,7 +11,7 @@ import { ProfessionMockService } from '../../core/services/profession-mock.servi
  */
 @Component({
 	selector: 'app-profession-select-control',
-	imports: [CommonModule, AsyncPipe],
+	imports: [CommonModule, AsyncPipe, FormsModule, SelectModule],
 	templateUrl: './profession-select-control.component.html',
 	styleUrl: './profession-select-control.component.scss',
 	providers: [
@@ -47,9 +49,8 @@ export class ProfessionSelectControlComponent implements ControlValueAccessor {
 		this.disabled = isDisabled;
 	}
 
-	onSelectionChange(event: Event): void {
-		const target = event.target as HTMLSelectElement;
-		this.value = target.value;
+	onSelectionChange(event: SelectChangeEvent): void {
+		this.value = String(event.value ?? '');
 		this.onChange(this.value);
 	}
 

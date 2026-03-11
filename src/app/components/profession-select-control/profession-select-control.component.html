@@ -1,13 +1,13 @@
-<select
+<p-select
 	class="profession-select"
+	[options]="(professions$ | async) ?? []"
+	[ngModel]="value"
 	[disabled]="disabled"
-	[value]="value"
-	(change)="onSelectionChange($event)"
-	(blur)="handleBlur()"
-	aria-label="Profession"
->
-	<option value="">Selectionner une profession</option>
-	@for (profession of (professions$ | async) ?? []; track profession.code) {
-		<option [value]="profession.code">{{ profession.label }}</option>
-	}
-</select>
+	optionLabel="label"
+	optionValue="code"
+	placeholder="Selectionner une profession"
+	appendTo="body"
+	(onChange)="onSelectionChange($event)"
+	(onBlur)="handleBlur()"
+	ariaLabel="Profession"
+/>
