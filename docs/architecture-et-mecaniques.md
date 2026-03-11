@@ -242,7 +242,7 @@ Source de donnees :
 - La recherche globale cible actuellement `firstName` et `lastName`, pas `email`.
 - Le tri est configure pour nom/prenom, pas `email`.
 - Les validations d'adresse sont minimales (pas de messages d'erreur dedies).
-- `registerOnTouched` est defini dans le CVA, mais aucun evenement de blur ne declenche `onTouched`.
+- Cote CVA adresse, `registerOnTouched` est defini mais aucun evenement `blur` ne declenche encore `onTouched`.
 
 ## 10) Guide rapide d'extension
 Pour evoluer sans casser l'architecture :

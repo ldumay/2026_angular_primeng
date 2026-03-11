@@ -24,12 +24,12 @@ La page qui orchestre l'ensemble est :
 - `src/app/views/users-pages/users-page.component.ts`
 
 ## 3) Structure du Reactive Form
-`UserFormComponent` declare un `FormGroup` avec 5 controles :
+`UserFormComponent` declare un `FormGroup` avec 6 controles :
 - `firstName` : `required`
 - `lastName` : `required`
 - `email` : `required` + `email`
 - `password` : `required` + `minLength(8)` en creation
-- `profession` : `required` (valeur issue du select CVA)
+- `profession` : `required` (valeur issue du composant PrimeNG `p-select` via CVA)
 - `address` : objet adresse (alimente via le CVA)
 
 Extrait logique (niveau conceptuel) :
@@ -91,13 +91,13 @@ Propagation des valeurs :
 - il appelle `onChange(address)` pour synchroniser le `FormControl` parent
 
 ## 8) Focus sur le CVA de profession
-Le composant `ProfessionSelectControlComponent` implemente `ControlValueAccessor` pour encapsuler un champ de selection de profession.
+Le composant `ProfessionSelectControlComponent` implemente `ControlValueAccessor` pour encapsuler un champ de selection de profession base sur PrimeNG (`p-select`).
 
 Methodes CVA implementees :
 - `writeValue(value)` : met a jour la valeur selectionnee
 - `registerOnChange(fn)` : remonte la profession selectionnee
 - `registerOnTouched(fn)` : remonte le touched lors du blur
-- `setDisabledState(isDisabled)` : desactive/active le select
+- `setDisabledState(isDisabled)` : desactive/active le `p-select`
 
 Source des options :
 - le composant appelle `ProfessionMockService.listProfessions()`
