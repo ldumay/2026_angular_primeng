@@ -53,6 +53,7 @@ Le mode est determine par `@Input() selectedUser`.
 
 ### 4.1 En edition (`selectedUser` non nul)
 - `ngOnChanges` pre-remplit le formulaire via `patchValue`.
+- Le bouton `Dupliquer` est affiche et permet de creer un nouvel utilisateur a partir des valeurs courantes du formulaire.
 - Le mot de passe devient optionnel :
   - retrait de `required`
   - conservation de `minLength(8)`
@@ -72,6 +73,8 @@ Le mode est determine par `@Input() selectedUser`.
 - `remove: EventEmitter<User>`
 - `resetSelection: EventEmitter<void>`
 
+Le bouton `Dupliquer` emet egalement `create` avec un nouvel utilisateur (ID vide cote formulaire, regenere par la facade).
+
 `UsersPageComponent` recoit ces evenements et les delegue a `UsersFacade`.
 
 ## 6) Validation et messages d'erreur
@@ -86,6 +89,7 @@ Exemples :
 Mecanique UX :
 - les erreurs n'apparaissent pas immediatement au chargement
 - elles apparaissent apres interaction ou tentative de soumission
+- la duplication suit les memes regles de validation que la creation/mise a jour
 
 ## 7) Focus sur le CVA d'adresse
 Le composant `AddressControlComponent` implemente `ControlValueAccessor` pour devenir un vrai controle Angular Forms.
@@ -143,6 +147,12 @@ Utilisation :
 7. `submit()` construit un `User` (avec `profession`, `gender`, `car` et `Address`) et emet `create` ou `update`.
 8. `UsersPageComponent` relaye vers `UsersFacade`.
 9. `UsersFacade` met a jour les signals -> la liste se rafraichit.
+
+Cas de duplication (mode edition) :
+1. L'utilisateur clique sur `Dupliquer`.
+2. Le formulaire est valide puis converti en `User`.
+3. Le formulaire emet `create` (et non `update`) pour creer une nouvelle entree.
+4. La facade assigne un nouvel identifiant et ajoute la copie a la liste.
 
 ## 12) Bonnes pratiques deja appliquees
 - separation nette entre presentation (`components/`) et etat metier (`states/`)

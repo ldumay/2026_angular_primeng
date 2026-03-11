@@ -1,6 +1,6 @@
 <section class="p-3 md:p-4">
 	<div class="grid">
-		<div class="col-12 lg:col-7">
+		<div class="col-12 lg:col-5">
 			<p-card header="Utilisateurs">
 				<app-users-list
 					[users]="facade.users()"
@@ -11,7 +11,7 @@
 			</p-card>
 		</div>
 
-		<div class="col-12 lg:col-5">
+		<div class="col-12 lg:col-7">
 			<p-card header="Creation / Edition utilisateur">
 				<app-user-form
 					[selectedUser]="facade.selectedUser()"

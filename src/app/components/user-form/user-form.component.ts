@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonDirective } from 'primeng/button';
+import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputText } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { User } from '../../core/models/user.model';
@@ -21,6 +22,7 @@ import { ProfessionSelectControlComponent } from '../profession-select-control/p
 		InputText,
 		PasswordModule,
 		ButtonDirective,
+		FloatLabelModule,
 		AddressControlComponent,
 		CarSelectControlComponent,
 		GenderSelectControlComponent,

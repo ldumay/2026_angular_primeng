@@ -1,23 +1,29 @@
 <form [formGroup]="form" (ngSubmit)="submit()" class="user-form">
 	<div class="field">
-		<label for="lastName">Nom</label>
-		<input id="lastName" pInputText formControlName="lastName" />
+		<p-floatlabel variant="on">
+			<input id="lastName" pInputText formControlName="lastName" />
+			<label for="lastName">Nom</label>
+		</p-floatlabel>
 		@if (form.controls.lastName.touched && form.controls.lastName.invalid) {
 			<small class="error">Le nom est obligatoire.</small>
 		}
 	</div>
 
 	<div class="field">
-		<label for="firstName">Prenom</label>
-		<input id="firstName" pInputText formControlName="firstName" />
+		<p-floatlabel variant="on">
+			<input id="firstName" pInputText formControlName="firstName" />
+			<label for="firstName">Prenom</label>
+		</p-floatlabel>
 		@if (form.controls.firstName.touched && form.controls.firstName.invalid) {
 			<small class="error">Le prenom est obligatoire.</small>
 		}
 	</div>
 
 	<div class="field">
-		<label for="email">Email</label>
-		<input id="email" pInputText formControlName="email" />
+		<p-floatlabel variant="on">
+			<input id="email" pInputText formControlName="email" />
+			<label for="email">Email</label>
+		</p-floatlabel>
 		@if (form.controls.email.touched && form.controls.email.hasError('required')) {
 			<small class="error">L'email est obligatoire.</small>
 		}
@@ -27,13 +33,16 @@
 	</div>
 
 	<div class="field">
-		<label for="password">Mot de passe</label>
-		<p-password
-			id="password"
-			formControlName="password"
-			[feedback]="true"
-			[toggleMask]="true"
-		/>
+		<p-floatlabel variant="on">
+			<p-password
+				id="password"
+				formControlName="password"
+				[feedback]="true"
+				[toggleMask]="true"
+				fluid
+			/>
+			<label for="password">Mot de passe</label>
+		</p-floatlabel>
 		@if (form.controls.password.touched && form.controls.password.hasError('required')) {
 			<small class="error">Le mot de passe est obligatoire en creation.</small>
 		}
@@ -43,32 +52,40 @@
 	</div>
 
 	<div class="field">
-		<label for="profession">Profession</label>
-		<app-profession-select-control formControlName="profession"></app-profession-select-control>
+		<p-floatlabel variant="on">
+			<app-profession-select-control formControlName="profession"></app-profession-select-control>
+			<label for="profession">Profession</label>
+		</p-floatlabel>
 		@if (form.controls.profession.touched && form.controls.profession.hasError('required')) {
 			<small class="error">La profession est obligatoire.</small>
 		}
 	</div>
 
 	<div class="field">
-		<label for="gender">Genre</label>
-		<app-gender-select-control formControlName="gender"></app-gender-select-control>
+		<p-floatlabel variant="on">
+			<app-gender-select-control formControlName="gender"></app-gender-select-control>
+			<label for="gender">Genre</label>
+		</p-floatlabel>
 		@if (form.controls.gender.touched && form.controls.gender.hasError('required')) {
 			<small class="error">Le genre est obligatoire.</small>
 		}
 	</div>
 
 	<div class="field">
-		<label for="car">Voiture</label>
-		<app-car-select-control formControlName="car"></app-car-select-control>
+		<p-floatlabel variant="on">
+			<app-car-select-control formControlName="car"></app-car-select-control>
+			<label for="car">Voiture</label>
+		</p-floatlabel>
 		@if (form.controls.car.touched && form.controls.car.hasError('required')) {
 			<small class="error">La voiture est obligatoire.</small>
 		}
 	</div>
 
 	<div class="field">
-		<label>Adresse</label>
-		<app-address-control formControlName="address"></app-address-control>
+		<p-floatlabel variant="on">
+			<app-address-control formControlName="address"></app-address-control>
+			<label>Adresse</label>
+		</p-floatlabel>
 	</div>
 
 	<div class="actions">
@@ -81,14 +98,6 @@
 			(click)="clear()"
 		></button>
 		@if (isEditMode) {
-			<button
-				pButton
-				type="button"
-				severity="contrast"
-				label="Dupliquer"
-				(click)="duplicateCurrent()"
-			></button>
-
 			<button
 				pButton
 				type="button"

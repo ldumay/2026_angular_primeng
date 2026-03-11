@@ -171,6 +171,7 @@ Mecaniques principales :
   - obligatoire en creation
   - optionnel en edition (conserve l'ancien si vide)
 - `submit()` emet `create` ou `update`
+- `duplicateCurrent()` emet `create` en mode edition pour dupliquer l'utilisateur selectionne
 - `clear()` reinitialise formulaire + deselection
 - `deleteCurrent()` emet suppression puis nettoyage
 
