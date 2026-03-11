@@ -43,6 +43,14 @@
 	</div>
 
 	<div class="field">
+		<label for="profession">Profession</label>
+		<app-profession-select-control formControlName="profession" />
+		@if (form.controls.profession.touched && form.controls.profession.hasError('required')) {
+			<small class="error">La profession est obligatoire.</small>
+		}
+	</div>
+
+	<div class="field">
 		<label>Adresse</label>
 		<app-address-control formControlName="address" />
 	</div>

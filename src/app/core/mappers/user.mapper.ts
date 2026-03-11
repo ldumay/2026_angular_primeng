@@ -19,6 +19,7 @@ export class UserMapper {
 			firstName: dto.name.first,
 			lastName: dto.name.last,
 			email: dto.email,
+			profession: 'dev_web',
 			password: dto.login.password,
 			address: {
 				street: `${dto.location.street.number} ${dto.location.street.name}`.trim(),

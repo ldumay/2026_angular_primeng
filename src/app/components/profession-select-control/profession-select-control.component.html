@@ -1,0 +1,13 @@
+<select
+	class="profession-select"
+	[disabled]="disabled"
+	[value]="value"
+	(change)="onSelectionChange($event)"
+	(blur)="handleBlur()"
+	aria-label="Profession"
+>
+	<option value="">Selectionner une profession</option>
+	@for (profession of (professions$ | async) ?? []; track profession.code) {
+		<option [value]="profession.code">{{ profession.label }}</option>
+	}
+</select>

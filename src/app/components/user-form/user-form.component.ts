@@ -7,6 +7,7 @@ import { PasswordModule } from 'primeng/password';
 import { User } from '../../core/models/user.model';
 import { Address } from '../../core/models/address.model';
 import { AddressControlComponent } from '../adress-control/address-control.component';
+import { ProfessionSelectControlComponent } from '../profession-select-control/profession-select-control.component';
 
 /** Composant de formulaire reactif pour creation et edition d'utilisateur. */
 @Component({
@@ -18,6 +19,7 @@ import { AddressControlComponent } from '../adress-control/address-control.compo
 		PasswordModule,
 		ButtonDirective,
 		AddressControlComponent,
+		ProfessionSelectControlComponent,
 	],
 	templateUrl: './user-form.component.html',
 	styleUrl: './user-form.component.scss',
@@ -41,6 +43,10 @@ export class UserFormComponent implements OnChanges {
 			nonNullable: true,
 			validators: [Validators.required, Validators.minLength(8)],
 		}),
+		profession: new FormControl('', {
+			nonNullable: true,
+			validators: [Validators.required],
+		}),
 		address: new FormControl(
 			{ street: '', city: '', postalCode: '', country: '' },
 			{ nonNullable: true },
@@ -61,6 +67,7 @@ export class UserFormComponent implements OnChanges {
 				firstName: this.selectedUser.firstName,
 				lastName: this.selectedUser.lastName,
 				email: this.selectedUser.email,
+				profession: this.selectedUser.profession,
 				password: this.selectedUser.password ?? '',
 				address: this.selectedUser.address,
 			});
@@ -72,6 +79,7 @@ export class UserFormComponent implements OnChanges {
 				firstName: '',
 				lastName: '',
 				email: '',
+				profession: '',
 				password: '',
 				address: { street: '', city: '', postalCode: '', country: '' },
 			});
@@ -106,6 +114,7 @@ export class UserFormComponent implements OnChanges {
 			value.firstName,
 			value.lastName,
 			value.email,
+			value.profession,
 			resolvedPassword,
 			address,
 		);
@@ -124,6 +133,7 @@ export class UserFormComponent implements OnChanges {
 			firstName: '',
 			lastName: '',
 			email: '',
+			profession: '',
 			password: '',
 			address: { street: '', city: '', postalCode: '', country: '' },
 		});

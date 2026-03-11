@@ -11,7 +11,7 @@ Il couvre :
 - les modeles metier
 - les DTO et le mapper
 - les services et la facade d'etat
-- les composants UI (liste, formulaire, CVA adresse)
+- les composants UI (liste, formulaire, CVA adresse, CVA profession)
 - la mecanique reactive entre toutes les parties
 
 ## 2) Stack et outils utilises
@@ -39,11 +39,11 @@ Le projet suit une separation claire des responsabilites :
 
 Structure principale :
 - `src/app/views/` : pages de l'application (`home`, `users-pages`)
-- `src/app/components/` : composants reutilisables (`users-list`, `user-form`, `adress-control`)
+- `src/app/components/` : composants reutilisables (`users-list`, `user-form`, `adress-control`, `profession-select-control`)
 - `src/app/core/models/` : modeles domaine (`User`, `Address`)
 - `src/app/core/dto/` : contrats des reponses API
 - `src/app/core/mappers/` : conversion DTO -> modele domaine
-- `src/app/core/services/` : acces HTTP
+- `src/app/core/services/` : acces HTTP + service mock de professions
 - `src/app/states/` : facade d'etat applicatif
 
 ## 4) Navigation et pages
@@ -80,6 +80,8 @@ Le routing est defini dans `src/app/app.routes.ts` :
 
 Ces classes representent les objets manipules dans l'application (independants du format API).
 
+Le modele `User` contient egalement `profession` (code de la profession selectionnee).
+
 ### 5.2 DTO API
 `src/app/core/dto/user-api.dto.ts` decrit le format de `randomuser.me` :
 - `UserApiDto`
@@ -97,6 +99,12 @@ Ces classes representent les objets manipules dans l'application (independants d
 - centralise l'appel HTTP `GET https://randomuser.me/api/?results=20&nat=fr`
 - applique le mapper pour retourner `Observable<User[]>`
 - isole la couche presentation de la logique d'acces API
+
+### 5.5 Service mock de professions
+`src/app/core/services/profession-mock.service.ts` :
+- expose une liste mockee de professions
+- retourne des options `code/label` via `listProfessions()`
+- alimente le composant CVA `app-profession-select-control`
 
 ## 6) Couche metier : facade reactive
 `src/app/states/users.facade.ts` est la couche pivot.
@@ -149,7 +157,7 @@ Role : creation/edition/suppression utilisateur.
 Voir aussi la documentation detaillee du formulaire : `docs/reactive-forms-et-cva.md`.
 
 Mecaniques principales :
-- `FormGroup` type avec controles : `firstName`, `lastName`, `email`, `password`, `address`
+- `FormGroup` type avec controles : `firstName`, `lastName`, `email`, `password`, `profession`, `address`
 - validations : `required`, `email`, `minLength(8)`
 - mode creation vs edition pilote par `selectedUser`
 - `ngOnChanges` pre-remplit le formulaire en edition
@@ -176,6 +184,21 @@ Utilisation :
 - integre dans `UserFormComponent` via `formControlName="address"`
 - detail de l'implementation CVA dans `docs/reactive-forms-et-cva.md`
 
+### 7.4 Composant profession reutilisable (CVA)
+Fichier :
+- `src/app/components/profession-select-control/profession-select-control.component.ts`
+
+Role : encapsuler la selection de profession comme controle reutilisable compatible Reactive Forms.
+
+Mecaniques CVA :
+- `writeValue` : synchronise la valeur actuelle de la profession
+- `registerOnChange` : remonte la profession selectionnee au parent
+- `registerOnTouched` : propage l'etat touched au blur
+- `setDisabledState` : synchronise l'etat active/desactive
+
+Source de donnees :
+- charge les options via `ProfessionMockService`
+
 ## 8) Flux de donnees bout-en-bout
 ### 8.1 Chargement initial
 1. `UsersPageComponent.ngOnInit()` appelle `facade.load()`.
@@ -194,8 +217,9 @@ Utilisation :
 ### 8.3 Creation
 1. Formulaire vide + validation OK.
 2. `create.emit(user)` -> `facade.create(user)`.
-3. Ajout local en tete de liste avec id calcule localement.
-4. Reset formulaire + clear selection.
+3. L'utilisateur cree contient aussi `profession` (code de la valeur selectionnee).
+4. Ajout local en tete de liste avec id calcule localement.
+5. Reset formulaire + clear selection.
 
 ### 8.4 Suppression
 1. Suppression depuis la table ou le formulaire.
@@ -235,4 +259,6 @@ Pour evoluer sans casser l'architecture :
 - `src/app/core/mappers/user.mapper.ts`
 - `src/app/components/user-form/user-form.component.ts`
 - `src/app/components/adress-control/address-control.component.ts`
+- `src/app/components/profession-select-control/profession-select-control.component.ts`
+- `src/app/core/services/profession-mock.service.ts`
 - `src/app/components/users-list/users-list.component.html`

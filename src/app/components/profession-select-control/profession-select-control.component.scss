@@ -1,0 +1,18 @@
+.profession-select {
+	height: 2.5rem;
+	width: 100%;
+	border: 1px solid #d0d5dd;
+	border-radius: 6px;
+	padding: 0 0.75rem;
+	background: #fff;
+}
+
+.profession-select:focus {
+	outline: 2px solid #84c5f4;
+	outline-offset: 1px;
+}
+
+.profession-select:disabled {
+	background: #f2f4f7;
+	cursor: not-allowed;
+}

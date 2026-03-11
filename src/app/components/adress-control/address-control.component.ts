@@ -17,14 +17,7 @@ import { Address } from '../../core/models/address.model';
 @Component({
 	selector: 'app-address-control',
 	imports: [CommonModule, ReactiveFormsModule, InputText],
-	template: `
-		<div [formGroup]="form" class="address-grid">
-			<input pInputText formControlName="street" placeholder="Rue" />
-			<input pInputText formControlName="city" placeholder="Ville" />
-			<input pInputText formControlName="postalCode" placeholder="Code postal" />
-			<input pInputText formControlName="country" placeholder="Pays" />
-		</div>
-	`,
+	templateUrl: './address-control.component.html',
 	styleUrl: './address-control.component.scss',
 	providers: [
 		{

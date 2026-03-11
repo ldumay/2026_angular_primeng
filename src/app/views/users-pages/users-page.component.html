@@ -1,0 +1,26 @@
+<section class="p-3 md:p-4">
+	<div class="grid">
+		<div class="col-12 lg:col-7">
+			<p-card header="Utilisateurs">
+				<app-users-list
+					[users]="facade.users()"
+					(edit)="onEdit($event)"
+					(remove)="onDelete($event)"
+					(clearAll)="onClearAll()"
+				/>
+			</p-card>
+		</div>
+
+		<div class="col-12 lg:col-5">
+			<p-card header="Creation / Edition utilisateur">
+				<app-user-form
+					[selectedUser]="facade.selectedUser()"
+					(create)="onCreate($event)"
+					(update)="onUpdate($event)"
+					(remove)="onDelete($event)"
+					(resetSelection)="clearSelection()"
+				/>
+			</p-card>
+		</div>
+	</div>
+</section>

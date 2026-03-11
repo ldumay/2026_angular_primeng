@@ -14,6 +14,12 @@ Le formulaire utilisateur est porte par :
 Le controle d'adresse reutilisable est porte par :
 - `src/app/components/adress-control/address-control.component.ts`
 
+Le controle de profession reutilisable est porte par :
+- `src/app/components/profession-select-control/profession-select-control.component.ts`
+
+La source de donnees mockees des professions est :
+- `src/app/core/services/profession-mock.service.ts`
+
 La page qui orchestre l'ensemble est :
 - `src/app/views/users-pages/users-page.component.ts`
 
@@ -23,6 +29,7 @@ La page qui orchestre l'ensemble est :
 - `lastName` : `required`
 - `email` : `required` + `email`
 - `password` : `required` + `minLength(8)` en creation
+- `profession` : `required` (valeur issue du select CVA)
 - `address` : objet adresse (alimente via le CVA)
 
 Extrait logique (niveau conceptuel) :
@@ -83,21 +90,39 @@ Propagation des valeurs :
 - a chaque changement, il reconstruit un objet `Address`
 - il appelle `onChange(address)` pour synchroniser le `FormControl` parent
 
-## 8) Flux complet des donnees formulaire
+## 8) Focus sur le CVA de profession
+Le composant `ProfessionSelectControlComponent` implemente `ControlValueAccessor` pour encapsuler un champ de selection de profession.
+
+Methodes CVA implementees :
+- `writeValue(value)` : met a jour la valeur selectionnee
+- `registerOnChange(fn)` : remonte la profession selectionnee
+- `registerOnTouched(fn)` : remonte le touched lors du blur
+- `setDisabledState(isDisabled)` : desactive/active le select
+
+Source des options :
+- le composant appelle `ProfessionMockService.listProfessions()`
+- chaque option contient `code` (valeur stockee) et `label` (texte affiche)
+
+Utilisation :
+- integre dans le formulaire parent via `formControlName="profession"`
+
+## 9) Flux complet des donnees formulaire
 1. L'utilisateur tape dans `UserFormComponent`.
 2. Les controles Angular mettent a jour la valeur et la validite.
-3. Pour `address`, c'est `AddressControlComponent` qui propage la valeur via `onChange`.
-4. `submit()` construit un `User` (avec `Address`) et emet `create` ou `update`.
-5. `UsersPageComponent` relaye vers `UsersFacade`.
-6. `UsersFacade` met a jour les signals -> la liste se rafraichit.
+3. Pour `profession`, `ProfessionSelectControlComponent` propage la valeur code via `onChange`.
+4. Pour `address`, `AddressControlComponent` propage la valeur via `onChange`.
+5. `submit()` construit un `User` (avec `profession` et `Address`) et emet `create` ou `update`.
+6. `UsersPageComponent` relaye vers `UsersFacade`.
+7. `UsersFacade` met a jour les signals -> la liste se rafraichit.
 
-## 9) Bonnes pratiques deja appliquees
+## 10) Bonnes pratiques deja appliquees
 - separation nette entre presentation (`components/`) et etat metier (`states/`)
 - formulaire type et centralise
 - changement dynamique des validateurs selon le mode creation/edition
 - composant adresse reutilisable, encapsule et branchable par `formControlName`
+- composant profession reutilisable, encapsule et alimente par un service dedie
 
-## 10) Limites actuelles et ameliorations recommandees
+## 11) Limites actuelles et ameliorations recommandees
 - `registerOnTouched` est prepare mais pas encore declenche sur `blur` des inputs adresse.
 - validations adresse minimales : pas de validateurs specifiques (`required`, format code postal, etc.).
 - pas de messages d'erreur dedies pour les champs d'adresse.
@@ -106,10 +131,13 @@ Pistes d'amelioration :
 - ajouter des handlers `(blur)` dans `AddressControlComponent` pour appeler `onTouched()`
 - ajouter des validateurs sur les champs adresse
 - exposer les erreurs adresse dans le template parent pour un retour utilisateur plus explicite
+- remplacer les donnees mockees des professions par une API reelle si besoin metier
 
-## 11) References rapides
+## 12) References rapides
 - `src/app/components/user-form/user-form.component.ts`
 - `src/app/components/user-form/user-form.component.html`
 - `src/app/components/adress-control/address-control.component.ts`
+- `src/app/components/profession-select-control/profession-select-control.component.ts`
+- `src/app/core/services/profession-mock.service.ts`
 - `src/app/views/users-pages/users-page.component.ts`
 - `src/app/states/users.facade.ts`
