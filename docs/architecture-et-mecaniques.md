@@ -262,8 +262,7 @@ Source de donnees :
 
 ### 9.2 Ecarts a corriger pour coller 100% au cahier des charges
 - La liste n'affiche actuellement pas l'email (seulement nom/prenom).
-- La recherche globale cible actuellement `firstName` et `lastName`, pas `email`.
-- Le tri est configure pour nom/prenom, pas `email`.
+- Le tri est configure pour nom/prenom/genre, pas `email`.
 - Les validations d'adresse sont minimales (pas de messages d'erreur dedies).
 - Cote CVA adresse, `registerOnTouched` est defini mais aucun evenement `blur` ne declenche encore `onTouched`.
 
