@@ -2,8 +2,10 @@
 
 Ceci est un projet de tests Angular 21 utilisant PrimeNG et PrimeFlex 21.
 
+## Idée principale
+
+L'idée principale du projet de test est sourcée dans le fichier `Rz_Docs_1_Chat_IA.md`.
+
 ## Documentation
 
-Une documentation technique detaillee du projet est disponible ici :
-
-- `docs/architecture-et-mecaniques.md`
+Une documentation technique detaillee du projet est disponible ici : `docs/architecture-et-mecaniques.md`.
