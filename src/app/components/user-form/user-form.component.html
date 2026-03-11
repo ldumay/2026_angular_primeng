@@ -1,0 +1,69 @@
+<form [formGroup]="form" (ngSubmit)="submit()" class="user-form">
+	<div class="field">
+		<label for="lastName">Nom</label>
+		<input id="lastName" pInputText formControlName="lastName" />
+		@if (form.controls.lastName.touched && form.controls.lastName.invalid) {
+			<small class="error">Le nom est obligatoire.</small>
+		}
+	</div>
+
+	<div class="field">
+		<label for="firstName">Prenom</label>
+		<input id="firstName" pInputText formControlName="firstName" />
+		@if (form.controls.firstName.touched && form.controls.firstName.invalid) {
+			<small class="error">Le prenom est obligatoire.</small>
+		}
+	</div>
+
+	<div class="field">
+		<label for="email">Email</label>
+		<input id="email" pInputText formControlName="email" />
+		@if (form.controls.email.touched && form.controls.email.hasError('required')) {
+			<small class="error">L'email est obligatoire.</small>
+		}
+		@if (form.controls.email.touched && form.controls.email.hasError('email')) {
+			<small class="error">Le format de l'email est invalide.</small>
+		}
+	</div>
+
+	<div class="field">
+		<label for="password">Mot de passe</label>
+		<p-password
+			id="password"
+			formControlName="password"
+			[feedback]="true"
+			[toggleMask]="true"
+		/>
+		@if (form.controls.password.touched && form.controls.password.hasError('required')) {
+			<small class="error">Le mot de passe est obligatoire en creation.</small>
+		}
+		@if (form.controls.password.touched && form.controls.password.hasError('minlength')) {
+			<small class="error">Le mot de passe doit contenir au moins 8 caracteres.</small>
+		}
+	</div>
+
+	<div class="field">
+		<label>Adresse</label>
+		<app-address-control formControlName="address" />
+	</div>
+
+	<div class="actions">
+		<button pButton type="submit" [label]="isEditMode ? 'Mettre a jour' : 'Creer'"></button>
+		<button
+			pButton
+			type="button"
+			severity="secondary"
+			label="Reinitialiser"
+			(click)="clear()"
+		></button>
+		@if (isEditMode) {
+			<button
+				pButton
+				type="button"
+				severity="danger"
+				label="Supprimer"
+				(click)="deleteCurrent()"
+			></button>
+		}
+	</div>
+</form>

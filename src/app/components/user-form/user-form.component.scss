@@ -1,0 +1,19 @@
+.user-form {
+	display: grid;
+	gap: 0.75rem;
+}
+
+.field {
+	display: grid;
+	gap: 0.35rem;
+}
+
+.actions {
+	display: flex;
+	gap: 0.5rem;
+	flex-wrap: wrap;
+}
+
+.error {
+	color: #b42318;
+}

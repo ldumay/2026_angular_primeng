@@ -1,0 +1,16 @@
+<p-toolbar>
+	<ng-template #start>
+		<strong class="text-lg">Prime Users Manager</strong>
+	</ng-template>
+
+	<ng-template #end>
+		<div class="flex flex-wrap gap-2 justify-content-end">
+			<a pButton routerLink="/" label="Accueil" severity="secondary"></a>
+			<a pButton routerLink="/users" label="Utilisateurs"></a>
+		</div>
+	</ng-template>
+</p-toolbar>
+
+<main class="app-main">
+	<router-outlet />
+</main>
