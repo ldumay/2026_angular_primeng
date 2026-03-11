@@ -8,4 +8,7 @@ L'idée principale du projet de test est sourcée dans le fichier `Rz_Docs_1_Cha
 
 ## Documentation
 
-Une documentation technique detaillee du projet est disponible ici : `docs/architecture-et-mecaniques.md`.
+Une documentation technique detaillee du projet est disponible ici :
+
+- architecture globale : `docs/architecture-et-mecaniques.md`
+- reactive forms et cva : `docs/reactive-forms-et-cva.md`

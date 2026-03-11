@@ -1,5 +1,8 @@
 # Documentation technique - Architecture et mecaniques du projet
 
+## Liens de documentation associee
+- Reactive Forms et CVA : `docs/reactive-forms-et-cva.md`
+
 ## 1) Objectif de cette documentation
 Ce document decrit de maniere simple et detaillee les outils, couches techniques et flux de donnees utilises dans le projet Angular 21 + PrimeNG 21.
 
@@ -143,6 +146,8 @@ Fichiers :
 
 Role : creation/edition/suppression utilisateur.
 
+Voir aussi la documentation detaillee du formulaire : `docs/reactive-forms-et-cva.md`.
+
 Mecaniques principales :
 - `FormGroup` type avec controles : `firstName`, `lastName`, `email`, `password`, `address`
 - validations : `required`, `email`, `minLength(8)`
@@ -169,6 +174,7 @@ Mecaniques CVA :
 
 Utilisation :
 - integre dans `UserFormComponent` via `formControlName="address"`
+- detail de l'implementation CVA dans `docs/reactive-forms-et-cva.md`
 
 ## 8) Flux de donnees bout-en-bout
 ### 8.1 Chargement initial
