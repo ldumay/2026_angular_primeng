@@ -113,23 +113,57 @@ export class UserFormComponent implements OnChanges {
 			return;
 		}
 
+		const user = this.buildUserFromForm(this.selectedUser?.id ?? 0, this.selectedUser?.password);
+		if (!user) {
+			return;
+		}
+
+		if (this.selectedUser) {
+			this.update.emit(user);
+		} else {
+			this.create.emit(user);
+		}
+
+		this.clear();
+	}
+
+	duplicateCurrent(): void {
+		if (!this.selectedUser) {
+			return;
+		}
+
+		this.form.markAllAsTouched();
+		if (this.form.invalid) {
+			return;
+		}
+
+		const duplicatedUser = this.buildUserFromForm(0, this.selectedUser.password);
+		if (!duplicatedUser) {
+			return;
+		}
+
+		this.create.emit(duplicatedUser);
+		this.clear();
+	}
+
+	private buildUserFromForm(id: number, fallbackPassword?: string): User | null {
 		const value = this.form.getRawValue();
 		const trimmedPassword = value.password.trim();
-		const resolvedPassword = this.selectedUser
-			? trimmedPassword || this.selectedUser.password
-			: trimmedPassword;
+		const resolvedPassword = trimmedPassword || fallbackPassword;
+
+		if (!value.car) {
+			return null;
+		}
+
 		const address = new Address(
 			value.address.street,
 			value.address.city,
 			value.address.postalCode,
 			value.address.country,
 		);
-		if (!value.car) {
-			return;
-		}
 
-		const user = new User(
-			this.selectedUser?.id ?? 0,
+		return new User(
+			id,
 			value.firstName,
 			value.lastName,
 			value.email,
@@ -139,14 +173,6 @@ export class UserFormComponent implements OnChanges {
 			resolvedPassword,
 			address,
 		);
-
-		if (this.selectedUser) {
-			this.update.emit(user);
-		} else {
-			this.create.emit(user);
-		}
-
-		this.clear();
 	}
 
 	clear(): void {
