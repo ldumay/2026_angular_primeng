@@ -1,6 +1,16 @@
+:host {
+	display: block;
+	height: 100%;
+}
+
 .search-item {
 	display: flex;
 	flex-direction: column;
 	gap: 0.15rem;
 }
 
+.user-list {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+}
