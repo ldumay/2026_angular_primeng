@@ -1,6 +1,7 @@
 import { Component, computed, signal } from '@angular/core';
 import { Card } from 'primeng/card';
 import { LegacyUser } from '../../core/models/legacy-user.model';
+import { MOCK_LEGACY_USERS } from '../../core/mocks/legacy-users.mock';
 import { LegacyUserFormComponent } from './legacy-user-form.component';
 import { LegacyUserListComponent } from './legacy-user-list.component';
 import { LegacyUserSearchComponent } from './legacy-user-search.component';
@@ -12,14 +13,7 @@ import { LegacyUserSearchComponent } from './legacy-user-search.component';
 	styleUrl: './legacy-users-view.component.scss',
 })
 export class LegacyUsersViewComponent {
-	readonly users = signal<LegacyUser[]>([
-		{
-			id: 1,
-			pseudo: 'alice',
-			email: 'alice@example.com',
-			location: { address: '10 rue de Rivoli', country: 'FR' },
-		},
-	]);
+	readonly users = signal<LegacyUser[]>(MOCK_LEGACY_USERS.map((u) => ({ ...u })));
 
 	readonly selectedUserId = signal<number | null>(null);
 
@@ -28,7 +22,7 @@ export class LegacyUsersViewComponent {
 		return this.users().find((u) => u.id === id) ?? null;
 	});
 
-	private nextId = 2;
+	private nextId = MOCK_LEGACY_USERS.length + 1;
 
 	onUserSelect(id: number | null): void {
 		this.selectedUserId.set(id);
@@ -47,4 +41,3 @@ export class LegacyUsersViewComponent {
 		this.users.update((list) => [...list, newUser]);
 	}
 }
-

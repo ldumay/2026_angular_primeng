@@ -1,21 +1,14 @@
-import { inject, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { map, Observable } from 'rxjs';
-import { UserApiListResponseDto } from '../dto/user-api.dto';
+import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
 import { User } from '../models/user.model';
-import { UserMapper } from '../mappers/user.mapper';
+import { MOCK_USERS } from '../mocks/users.mock';
 
 /**
- * Service de donnees: isole l'acces HTTP vers une API REST de demonstration.
+ * Service de donnees: fournit les utilisateurs depuis une base de mocks locale.
  */
 @Injectable({ providedIn: 'root' })
 export class UserApiService {
-	private readonly http = inject(HttpClient);
-	private readonly baseUrl = 'https://randomuser.me/api';
-
 	listUsers(): Observable<User[]> {
-		return this.http
-			.get<UserApiListResponseDto>(`${this.baseUrl}/?results=20&nat=fr`)
-			.pipe(map((res) => res.results.map(UserMapper.fromApi)));
+		return of(MOCK_USERS.map((u) => ({ ...u })));
 	}
 }
