@@ -1,9 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { ControlContainer, FormGroup, FormGroupDirective, ReactiveFormsModule } from '@angular/forms';
+import { InputTextModule } from 'primeng/inputtext';
+import { SelectModule } from 'primeng/select';
 
 @Component({
 	selector: 'app-legacy-user-location',
-	imports: [ReactiveFormsModule],
+	imports: [ReactiveFormsModule, InputTextModule, SelectModule],
 	viewProviders: [
 		{
 			provide: ControlContainer,
@@ -14,6 +16,13 @@ import { ControlContainer, FormGroup, FormGroupDirective, ReactiveFormsModule } 
 	styleUrl: './legacy-user-location.component.scss',
 })
 export class LegacyUserLocationComponent {
+	readonly countryOptions = [
+		{ label: 'France', value: 'FR' },
+		{ label: 'Belgique', value: 'BE' },
+		{ label: 'Suisse', value: 'CH' },
+		{ label: 'Canada', value: 'CA' },
+	];
+
 	private readonly parentContainer = inject(ControlContainer);
 
 	get locationGroup(): FormGroup {

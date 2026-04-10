@@ -1,12 +1,20 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ButtonDirective } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
 import { LegacyUser } from '../../core/models/legacy-user.model';
 import { LegacyUserLocationComponent } from './legacy-user-location.component';
 
 @Component({
 	selector: 'app-legacy-user-form',
-	imports: [CommonModule, ReactiveFormsModule, LegacyUserLocationComponent],
+	imports: [
+		CommonModule,
+		ReactiveFormsModule,
+		InputTextModule,
+		ButtonDirective,
+		LegacyUserLocationComponent,
+	],
 	templateUrl: './legacy-user-form.component.html',
 	styleUrl: './legacy-user-form.component.scss',
 })

@@ -1,4 +1,5 @@
 import { Component, computed, signal } from '@angular/core';
+import { Card } from 'primeng/card';
 import { LegacyUser } from '../../core/models/legacy-user.model';
 import { LegacyUserFormComponent } from './legacy-user-form.component';
 import { LegacyUserListComponent } from './legacy-user-list.component';
@@ -6,7 +7,7 @@ import { LegacyUserSearchComponent } from './legacy-user-search.component';
 
 @Component({
 	selector: 'app-legacy-users-view',
-	imports: [LegacyUserSearchComponent, LegacyUserListComponent, LegacyUserFormComponent],
+	imports: [Card, LegacyUserSearchComponent, LegacyUserListComponent, LegacyUserFormComponent],
 	templateUrl: './legacy-users-view.component.html',
 	styleUrl: './legacy-users-view.component.scss',
 })

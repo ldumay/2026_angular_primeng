@@ -3,19 +3,7 @@
 	gap: 1rem;
 }
 
-.layout {
-	display: grid;
-	gap: 1rem;
-	grid-template-columns: 320px 1fr;
-}
-
 .hint {
-	color: #64748b;
-}
-
-@media (max-width: 960px) {
-	.layout {
-		grid-template-columns: 1fr;
-	}
+	color: var(--text-color-secondary);
 }
 

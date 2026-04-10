@@ -1,20 +1,31 @@
 <div class="user-list">
-	<h3>Utilisateurs ({{ users.length }})</h3>
+	<div class="flex align-items-center justify-content-between mb-2">
+		<h3 class="m-0">Utilisateurs ({{ users.length }})</h3>
+		<button pButton type="button" severity="secondary" [text]="true" (click)="clearSelection()">
+			Réinitialiser
+		</button>
+	</div>
 
 	@if (users.length === 0) {
-		<p class="empty">Aucun utilisateur. Ajoutez-en un.</p>
-	} @for (user of users; track trackById($index, user)) {
-		<div
-			class="user-card"
-			[class.selected]="user.id === selectedUserId"
-			(click)="onSelect(user)"
-			role="button"
-			[attr.aria-pressed]="user.id === selectedUserId"
+		<p class="text-color-secondary m-0">Aucun utilisateur. Ajoutez-en un.</p>
+	} @else {
+		<p-listbox
+			[options]="users"
+			[ngModel]="selectedUserId"
+			(onChange)="onSelectionChange($event)"
+			optionLabel="pseudo"
+			optionValue="id"
+			[checkmark]="true"
+			[style]="{ width: '100%' }"
 		>
-			<strong>{{ user.pseudo }}</strong>
-			<span>{{ user.email }}</span>
-			<small>{{ user.location.country }} - {{ user.location.address }}</small>
-		</div>
+			<ng-template #item let-user>
+				<div class="search-item">
+					<strong>{{ user.pseudo }}</strong>
+					<small>{{ user.email }}</small>
+					<small class="text-color-secondary">{{ user.location.country }} - {{ user.location.address }}</small>
+				</div>
+			</ng-template>
+		</p-listbox>
 	}
 </div>
 
