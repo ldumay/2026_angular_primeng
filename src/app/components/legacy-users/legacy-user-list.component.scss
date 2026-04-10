@@ -13,4 +13,14 @@
 	display: flex;
 	flex-direction: column;
 	height: 100%;
+
+	::ng-deep p-listbox {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+
+		.p-listbox {
+			height: 100%;
+		}
+	}
 }
