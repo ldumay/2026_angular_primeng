@@ -9,6 +9,10 @@ import { MOCK_USERS } from '../mocks/users.mock';
 @Injectable({ providedIn: 'root' })
 export class UserApiService {
 	listUsers(): Observable<User[]> {
-		return of(MOCK_USERS.map((u) => ({ ...u })));
+		return of(
+			MOCK_USERS.map((u) => ({ ...u })).sort((a, b) =>
+				a.lastName.localeCompare(b.lastName, 'fr', { sensitivity: 'base' }),
+			),
+		);
 	}
 }

@@ -13,7 +13,11 @@ import { LegacyUserSearchComponent } from './legacy-user-search.component';
 	styleUrl: './legacy-users-view.component.scss',
 })
 export class LegacyUsersViewComponent implements AfterViewChecked {
-	readonly users = signal<LegacyUser[]>(MOCK_LEGACY_USERS.map((u) => ({ ...u })));
+	readonly users = signal<LegacyUser[]>(
+		MOCK_LEGACY_USERS.map((u) => ({ ...u })).sort((a, b) =>
+			a.pseudo.localeCompare(b.pseudo, 'fr', { sensitivity: 'base' }),
+		),
+	);
 
 	readonly selectedUserId = signal<number | null>(null);
 
