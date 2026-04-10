@@ -2,7 +2,7 @@
 
 Ceci est un projet de tests Angular 21 utilisant PrimeNG et PrimeFlex 21.
 
-## Idée principale
+## Idée principale
 
 L'idée principale du projet de test est sourcée dans le fichier `Rz_Docs_1_Chat_IA.md`.
 
@@ -14,7 +14,7 @@ Une documentation technique detaillee du projet est disponible ici :
 - reactive forms et cva (adresse + profession + genre + voiture) : `docs/reactive-forms-et-cva.md`
 - troubleshooting (problemes rencontres et correctifs) : `docs/troubleshooting.md`
 
-## API REST :
+## API REST :
 
 - données utilisateurs de démo gratuite : https://randomuser.me/api/?results=<nombre_utilisateurs>
 
