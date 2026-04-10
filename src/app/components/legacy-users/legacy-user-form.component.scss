@@ -1,0 +1,24 @@
+form {
+	display: grid;
+	gap: 0.9rem;
+	padding: 1rem;
+	border: 1px solid #e5e7eb;
+	border-radius: 10px;
+	background: #ffffff;
+}
+
+label {
+	display: grid;
+	gap: 0.35rem;
+}
+
+.actions {
+	display: flex;
+	gap: 0.5rem;
+}
+
+.error {
+	color: #dc2626;
+	font-size: 0.85rem;
+}
+

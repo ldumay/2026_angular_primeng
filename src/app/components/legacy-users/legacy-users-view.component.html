@@ -1,0 +1,22 @@
+<div class="view-users">
+	<h2>Gestion des utilisateurs importée</h2>
+
+	<div class="layout">
+		<aside>
+			<app-legacy-user-list
+				[users]="users()"
+				[selectedUserId]="selectedUserId()"
+				(userSelect)="onUserSelect($event)"
+			/>
+		</aside>
+
+		<main>
+			@if (users().length === 0 && selectedUserId() === null) {
+				<p class="hint">Ajoutez ou sélectionnez un utilisateur.</p>
+			}
+
+			<app-legacy-user-form [selectedUser]="selectedUser()" (userSubmit)="onUserSubmit($event)" />
+		</main>
+	</div>
+</div>
+

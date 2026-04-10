@@ -1,0 +1,26 @@
+<div [formGroup]="locationGroup" class="location-fields">
+	<h4>Localisation</h4>
+
+	<label>
+		Adresse
+		<input formControlName="address" placeholder="123 rue de la Paix" />
+		@if (locationGroup.get('address')?.invalid && locationGroup.get('address')?.touched) {
+			<span class="error">Adresse requise (min. 5 caractères)</span>
+		}
+	</label>
+
+	<label>
+		Pays
+		<select formControlName="country">
+			<option value="">Choisir</option>
+			<option value="FR">France</option>
+			<option value="BE">Belgique</option>
+			<option value="CH">Suisse</option>
+			<option value="CA">Canada</option>
+		</select>
+		@if (locationGroup.get('country')?.invalid && locationGroup.get('country')?.touched) {
+			<span class="error">Pays requis</span>
+		}
+	</label>
+</div>
+
