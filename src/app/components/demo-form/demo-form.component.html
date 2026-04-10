@@ -1,0 +1,98 @@
+<div class="w-full m-0 pl-2 pr-2">
+	<h2>Démonstration PrimeNG</h2>
+
+	<p-toast></p-toast>
+
+	<div class="card">
+		<h3>Boutons de test avec infos via toast</h3>
+
+		<div class="flex gap-2">
+			<p-button label="Succès" (onClick)="showSuccess()" styleClass="p-button-success"></p-button>
+			<p-button label="Info" (onClick)="showInfo()" styleClass="p-button-info"></p-button>
+		</div>
+	</div>
+
+	<p-divider />
+
+	<h3>Formulaire de test</h3>
+	<form [formGroup]="form">
+		<div class="flex flex-wrap gap-4">
+			<div class="card w-6 mt-2 mb-2">
+				<p-floatlabel class="w-full md:w-80" variant="on">
+					<p-iconfield>
+						<p-inputicon class="pi pi-user" />
+						<input pInputText formControlName="textValue" />
+					</p-iconfield>
+					<label for="nom">Nom</label>
+				</p-floatlabel>
+				<small class="p-error" *ngIf="f.textValue.touched && f.textValue.errors">
+					<span *ngIf="f.textValue.errors['required']">Le champ est obligatoire</span>
+					<span *ngIf="f.textValue.errors['minlength']">Minimum 3 caractères</span>
+					<span *ngIf="f.textValue.errors['maxlength']">Maximum 20 caractères</span>
+				</small>
+			</div>
+
+			<div class="card w-6 mt-2 mb-2">
+				<p-floatlabel class="w-full md:w-80" variant="on">
+					<p-datepicker
+						formControlName="dateValue"
+						[showIcon]="true"
+						[showTime]="true"
+						[showClear]="true"
+						dateFormat="dd/mm/yy"
+					></p-datepicker>
+					<label for="date">Sélectionnez une date</label>
+				</p-floatlabel>
+				<small class="p-error" *ngIf="f.dateValue.touched && f.dateValue.errors">
+					<span *ngIf="f.dateValue.errors['required']">La date est obligatoire</span>
+				</small>
+			</div>
+
+			<div class="card w-12 mt-2 mb-2">
+				<app-select-cities formControlName="selectedCities" [cities]="cities"></app-select-cities>
+				<small class="p-error" *ngIf="f.selectedCities.touched && f.selectedCities.errors">
+					<span *ngIf="f.selectedCities.errors['required']">Sélection obligatoire</span>
+				</small>
+			</div>
+
+			<div class="card w-12 mt-2 mb-4">
+				<app-form-choices [colorChoiceForm]="colorChoiceForm"></app-form-choices>
+
+				<small class="p-error" *ngIf="f.colorChoice.get('color')?.touched && f.colorChoice.get('color')?.errors">
+					<span *ngIf="f.colorChoice.get('color')?.errors?.['required']">Couleur obligatoire</span>
+				</small>
+			</div>
+
+			<div class="card w-12">
+				<div class="w-full">
+					<p-checkbox formControlName="checked" [binary]="true" inputId="binary"></p-checkbox>
+					<label for="binary" class="ml-2">Accepter les conditions</label>
+					<br />
+					<small class="p-error" *ngIf="f.checked.touched && f.checked.errors">
+						<span *ngIf="f.checked.errors['required']">Vous devez accepter</span>
+					</small>
+				</div>
+			</div>
+
+			<div class="card w-full mt-2">
+				<p-button label="Submit" styleClass="p-button-info" (onClick)="validateForm()"></p-button>
+			</div>
+
+			<div class="card w-full ml-2 mt-2">
+				<p-button
+					label="Enable or disable"
+					styleClass="p-button-info"
+					[outlined]="true"
+					(onClick)="toggleEnableDisable()"
+				></p-button>
+			</div>
+		</div>
+	</form>
+
+	<p-divider />
+
+	<div>
+		<pre>{{ form.value | json }}</pre>
+	</div>
+</div>
+

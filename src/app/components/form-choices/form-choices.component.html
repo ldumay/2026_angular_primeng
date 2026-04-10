@@ -1,0 +1,36 @@
+<div [formGroup]="colorChoiceForm">
+	<div class="flex flex-column gap-2">
+		<div class="flex align-items-center gap-2">
+			<p-radioButton
+				formControlName="color"
+				name="color"
+				[value]="'blue'"
+				(onClick)="select('blue')"
+			/>
+			<label for="blue">Bleu</label>
+		</div>
+
+		<div class="flex align-items-center gap-2">
+			<p-radioButton
+				formControlName="color"
+				name="color"
+				[value]="'green'"
+				(onClick)="select('green')"
+			/>
+			<label for="green">Vert</label>
+		</div>
+
+		<div class="flex align-items-center gap-2">
+			<p-radioButton
+				formControlName="color"
+				name="color"
+				[value]="'red'"
+				(onClick)="select('red')"
+			/>
+			<label for="red">Rouge</label>
+		</div>
+
+		<small class="p-error mt-2" *ngIf="showRequiredError">Une couleur doit être sélectionnée</small>
+	</div>
+</div>
+
