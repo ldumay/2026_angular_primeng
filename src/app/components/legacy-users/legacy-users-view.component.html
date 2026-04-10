@@ -3,6 +3,8 @@
 
 	<div class="layout">
 		<aside>
+			<app-legacy-user-search [users]="users()" (userSelect)="onUserSelect($event)" />
+
 			<app-legacy-user-list
 				[users]="users()"
 				[selectedUserId]="selectedUserId()"

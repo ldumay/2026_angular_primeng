@@ -1,0 +1,21 @@
+<div class="search-user">
+	<p-autocomplete
+		[(ngModel)]="selectedUser"
+		[suggestions]="suggestions()"
+		(completeMethod)="search($event)"
+		(onSelect)="onSelect($event)"
+		(onClear)="onClear()"
+		optionLabel="pseudo"
+		placeholder="Rechercher un utilisateur..."
+		[showClear]="true"
+		fluid
+	>
+		<ng-template #item let-user>
+			<div class="search-item">
+				<strong>{{ user.pseudo }}</strong>
+				<span>{{ user.email }}</span>
+			</div>
+		</ng-template>
+	</p-autocomplete>
+</div>
+
