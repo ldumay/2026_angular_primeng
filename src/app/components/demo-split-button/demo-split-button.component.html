@@ -1,0 +1,46 @@
+<p-toast />
+
+<div style="padding: 2rem; display: flex; flex-direction: column; gap: 2rem">
+	<h1 style="margin: 0; font-size: 1.5rem; color: #1e293b">Exemple p-splitbutton - PrimeNG</h1>
+
+	<div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap">
+		<p-splitbutton
+			label="Sauvegarder"
+			icon="pi pi-save"
+			[model]="items"
+			(onClick)="onDefaultAction()"
+			severity="primary"
+		/>
+
+		<p-splitbutton
+			label="Exporter"
+			icon="pi pi-upload"
+			[model]="exportItems"
+			(onClick)="onExport('default')"
+			severity="secondary"
+			outlined
+		/>
+	</div>
+
+	<div style="display: flex; gap: 0.75rem; flex-wrap: wrap">
+		<p-button label="Bouton simple" icon="pi pi-check" severity="success" />
+		<p-button label="Désactivé" icon="pi pi-ban" disabled />
+		<p-button icon="pi pi-cog" severity="secondary" [rounded]="true" [text]="true" />
+	</div>
+
+	<div
+		style="
+			background: #f8fafc;
+			border: 1px solid #e2e8f0;
+			border-radius: 8px;
+			padding: 1rem;
+			font-family: monospace;
+			font-size: 0.85rem;
+			min-height: 60px;
+			color: #334155;
+		"
+	>
+		<strong>Dernière action :</strong> {{ lastAction || '-' }}
+	</div>
+</div>
+

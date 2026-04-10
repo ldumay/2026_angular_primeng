@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
@@ -38,6 +38,8 @@ import { SelectCitiesComponent } from '../select-cities/select-cities.component'
 	providers: [MessageService],
 })
 export class DemoFormComponent implements OnInit {
+	private readonly fb = inject(FormBuilder);
+
 	cities: City[] = [];
 	submitted = 0;
 
@@ -61,10 +63,7 @@ export class DemoFormComponent implements OnInit {
 		colorChoice: this.colorChoiceForm,
 	});
 
-	constructor(
-		private readonly fb: FormBuilder,
-		private readonly messageService: MessageService,
-	) {}
+	constructor(private readonly messageService: MessageService) {}
 
 	get f() {
 		return this.form.controls;
