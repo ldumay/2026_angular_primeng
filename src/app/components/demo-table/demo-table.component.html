@@ -1,0 +1,57 @@
+<div class="card">
+	<p-table
+		showGridlines
+		stripedRows
+		[columns]="cols"
+		[value]="products"
+		[tableStyle]="{ 'min-width': '50rem' }"
+		[loading]="loading"
+		[paginator]="true"
+		[rows]="5"
+		[rowsPerPageOptions]="[5, 10, 20, 30]"
+		sortMode="multiple"
+	>
+		<ng-template #header let-columns>
+			<tr>
+				@for (col of columns; track col.field) {
+					<th pSortableColumn="{{ col.field }}">
+						{{ col.header }}
+						<p-sortIcon field="{{ col.field }}" />
+					</th>
+				}
+			</tr>
+		</ng-template>
+
+		<ng-template #body let-product>
+			<tr>
+				<td *ngFor="let col of cols">
+					<ng-container *ngIf="col.field === 'image'; else defaultCell">
+						<img
+							[src]="'https://primefaces.org/cdn/primeng/images/demo/product/' + product[col.field]"
+							[alt]="product.name || 'product'"
+							class="w-6rem rounded"
+						/>
+					</ng-container>
+					<ng-template #defaultCell>
+						<ng-container *ngIf="col.field === 'rating'; else textCell">
+							<p-rating [(ngModel)]="product[col.field]" [readonly]="true" />
+						</ng-container>
+						<ng-template #textCell>
+							<ng-container *ngIf="col.field === 'inventoryStatus'; else normalText">
+								<p-tag [value]="product[col.field]" [severity]="getSeverity(product[col.field])" />
+							</ng-container>
+							<ng-template #normalText>{{ product[col.field] }}</ng-template>
+						</ng-template>
+					</ng-template>
+				</td>
+			</tr>
+		</ng-template>
+
+		<ng-template #footer>
+			<tr>
+				<td colspan="9">In total there are {{ products.length }} products.</td>
+			</tr>
+		</ng-template>
+	</p-table>
+</div>
+

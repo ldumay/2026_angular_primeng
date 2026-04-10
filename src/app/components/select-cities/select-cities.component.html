@@ -1,0 +1,19 @@
+<div class="w-full">
+	<p-floatlabel class="w-full md:w-80" variant="on">
+		<p-multiSelect
+			id="MultiSelect"
+			[options]="cities"
+			[(ngModel)]="selectedCities"
+			[disabled]="isDisabled"
+			(onChange)="onInternalChange($event)"
+			(onBlur)="handleBlur()"
+			optionLabel="name"
+			[filter]="true"
+			display="chip"
+			[showClear]="true"
+			style="min-width: 220px"
+		/>
+		<label for="MultiSelect">Select cities</label>
+	</p-floatlabel>
+</div>
+
