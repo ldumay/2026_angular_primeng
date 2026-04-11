@@ -15,6 +15,7 @@ import { City } from '../../core/models/demo/city.model';
 import { ColorChoice } from '../../core/models/demo/color-choice.type';
 import { FormChoicesComponent } from '../form-choices/form-choices.component';
 import { SelectCitiesComponent } from '../select-cities/select-cities.component';
+import { UserAutocompleteDemoComponent } from '../user-autocomplete-demo/user-autocomplete-demo.component';
 
 @Component({
 	selector: 'app-demo-form',
@@ -32,6 +33,7 @@ import { SelectCitiesComponent } from '../select-cities/select-cities.component'
 		ToastModule,
 		SelectCitiesComponent,
 		FormChoicesComponent,
+		UserAutocompleteDemoComponent,
 	],
 	templateUrl: './demo-form.component.html',
 	styleUrl: './demo-form.component.scss',

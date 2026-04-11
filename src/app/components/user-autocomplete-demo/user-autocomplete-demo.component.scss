@@ -1,0 +1,15 @@
+.user-autocomplete-demo {
+	display: flex;
+	flex-direction: column;
+}
+
+.suggestion-item {
+	display: flex;
+	flex-direction: column;
+	gap: 0.15rem;
+}
+
+.selected-summary ul {
+	list-style: disc;
+}
+

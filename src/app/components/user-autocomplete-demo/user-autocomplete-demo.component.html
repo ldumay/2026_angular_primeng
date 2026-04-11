@@ -1,0 +1,58 @@
+<div class="user-autocomplete-demo">
+	<h4 class="mt-0 mb-2">Recherche d'utilisateurs (données legacy)</h4>
+
+	<p-autocomplete
+		[(ngModel)]="selectedUsers"
+		[suggestions]="suggestions()"
+		(completeMethod)="search($event)"
+		(onSelect)="onSelect($event)"
+		(onUnselect)="onUnselect()"
+		optionLabel="pseudo"
+		placeholder="Rechercher par pseudo ou email..."
+		[multiple]="true"
+		[showClear]="true"
+		fluid
+	>
+		<ng-template #item let-user>
+			<div class="suggestion-item">
+				<strong>{{ user.pseudo }}</strong>
+				<small>{{ user.email }}</small>
+				<small class="text-color-secondary">{{ user.location.country }} — {{ user.location.address }}</small>
+			</div>
+		</ng-template>
+
+		<ng-template #selectedItem let-user>
+			<p-chip [label]="user.pseudo" [removable]="true" />
+		</ng-template>
+	</p-autocomplete>
+
+	<div class="flex gap-2 mt-3">
+		<p-button
+			label="Ajout 2 users random"
+			icon="pi pi-plus"
+			(onClick)="addTwoRandomUsers()"
+			severity="info"
+			[outlined]="true"
+		/>
+		<p-button
+			label="Réinitialiser"
+			icon="pi pi-times"
+			(onClick)="clearAll()"
+			severity="secondary"
+			[outlined]="true"
+		/>
+	</div>
+
+	@if (selectedUsers.length > 0) {
+		<p-divider />
+		<div class="selected-summary">
+			<h5 class="mt-0 mb-2">Utilisateurs sélectionnés ({{ selectedUsers.length }})</h5>
+			<ul class="m-0 pl-4">
+				@for (user of selectedUsers; track user.id) {
+					<li><strong>{{ user.pseudo }}</strong> — {{ user.email }} ({{ user.location.country }})</li>
+				}
+			</ul>
+		</div>
+	}
+</div>
+
