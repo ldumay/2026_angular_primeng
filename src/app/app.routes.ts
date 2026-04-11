@@ -22,5 +22,12 @@ export const routes: Routes = [
 				(m) => m.DemoSplitButtonPageComponent,
 			),
 	},
+	{
+		path: 'import-users',
+		loadComponent: () =>
+			import('./views/legacy-users-import-page/legacy-users-import-page.component').then(
+				(m) => m.LegacyUsersImportPageComponent,
+			),
+	},
 	{ path: '**', redirectTo: '' },
 ];

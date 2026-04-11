@@ -1,0 +1,43 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+	<h3 class="mt-0 mb-3">{{ isEditMode ? 'Modifier' : 'Ajouter' }} un utilisateur</h3>
+
+	<label>
+		Pseudo
+		<input pInputText formControlName="pseudo" placeholder="johndoe" class="w-full" />
+		@if (form.get('pseudo')?.invalid && form.get('pseudo')?.touched) {
+			<small class="p-error">Pseudo requis (min. 3 caractères)</small>
+		}
+	</label>
+
+	<label>
+		Email
+		<input
+			pInputText
+			formControlName="email"
+			type="email"
+			placeholder="john@example.com"
+			class="w-full"
+		/>
+		@if (form.get('email')?.invalid && form.get('email')?.touched) {
+			<small class="p-error">Email invalide</small>
+		}
+	</label>
+
+	<app-legacy-user-location />
+
+	<div class="actions">
+		<button pButton type="submit" [label]="isEditMode ? 'Mettre à jour' : 'Ajouter'"></button>
+		@if (isEditMode) {
+			<button pButton type="button" severity="secondary" [outlined]="true" (click)="form.reset()">
+				Annuler
+			</button>
+		}
+	</div>
+
+	<details>
+		<summary>Etat du formulaire</summary>
+		<pre>{{ form.value | json }}</pre>
+		<small>Valid: {{ form.valid }} | Dirty: {{ form.dirty }}</small>
+	</details>
+</form>
+
