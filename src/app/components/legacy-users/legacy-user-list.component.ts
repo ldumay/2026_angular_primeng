@@ -56,6 +56,7 @@ export class LegacyUserListComponent implements AfterViewChecked {
 		if (listContainer) {
 			this.applyFlexStretch(listContainer);
 			this.renderer.setStyle(listContainer, 'overflow-y', 'auto');
+			this.renderer.setStyle(listContainer, 'max-height', '22rem');
 		}
 
 		this.styled = true;
