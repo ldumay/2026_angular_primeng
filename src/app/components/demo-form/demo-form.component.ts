@@ -13,6 +13,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ToastModule } from 'primeng/toast';
 import { City } from '../../core/models/demo/city.model';
 import { ColorChoice } from '../../core/models/demo/color-choice.type';
+import { LegacyUser } from '../../core/models/legacy-user.model';
 import { FormChoicesComponent } from '../form-choices/form-choices.component';
 import { SelectCitiesComponent } from '../select-cities/select-cities.component';
 import { UserAutocompleteDemoComponent } from '../user-autocomplete-demo/user-autocomplete-demo.component';
@@ -63,6 +64,7 @@ export class DemoFormComponent implements OnInit {
 			validators: [Validators.requiredTrue],
 		}),
 		colorChoice: this.colorChoiceForm,
+		selectedLegacyUsers: this.fb.control<LegacyUser[]>([]),
 	});
 
 	constructor(private readonly messageService: MessageService) {}

@@ -1,49 +1,65 @@
-import { Component, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { AutoCompleteCompleteEvent, AutoCompleteModule, AutoCompleteSelectEvent } from 'primeng/autocomplete';
+import { Component, forwardRef, signal } from '@angular/core';
+import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { AutoCompleteCompleteEvent, AutoCompleteModule } from 'primeng/autocomplete';
 import { ButtonModule } from 'primeng/button';
-import { ChipModule } from 'primeng/chip';
-import { DividerModule } from 'primeng/divider';
 import { LegacyUser } from '../../core/models/legacy-user.model';
 import { MOCK_LEGACY_USERS } from '../../core/mocks/legacy-users.mock';
 
 @Component({
 	selector: 'app-user-autocomplete-demo',
-	imports: [FormsModule, AutoCompleteModule, ButtonModule, ChipModule, DividerModule],
+	imports: [FormsModule, AutoCompleteModule, ButtonModule],
 	templateUrl: './user-autocomplete-demo.component.html',
 	styleUrl: './user-autocomplete-demo.component.scss',
+	providers: [
+		{
+			provide: NG_VALUE_ACCESSOR,
+			useExisting: forwardRef(() => UserAutocompleteDemoComponent),
+			multi: true,
+		},
+	],
 })
-export class UserAutocompleteDemoComponent {
+export class UserAutocompleteDemoComponent implements ControlValueAccessor {
 	private readonly allUsers: LegacyUser[] = MOCK_LEGACY_USERS.map((u) => ({ ...u }));
 
 	selectedUsers: LegacyUser[] = [];
 	suggestions = signal<LegacyUser[]>([]);
+	isDisabled = false;
+
+	private onChange: (val: LegacyUser[]) => void = () => {};
+	private onTouched: () => void = () => {};
+
+	writeValue(value: LegacyUser[] | null): void {
+		this.selectedUsers = value ?? [];
+	}
+
+	registerOnChange(fn: (val: LegacyUser[]) => void): void {
+		this.onChange = fn;
+	}
+
+	registerOnTouched(fn: () => void): void {
+		this.onTouched = fn;
+	}
+
+	setDisabledState(isDisabled: boolean): void {
+		this.isDisabled = isDisabled;
+	}
 
 	search(event: AutoCompleteCompleteEvent): void {
 		const query = event.query.toLowerCase().trim();
-
 		const alreadySelectedIds = new Set(this.selectedUsers.map((u) => u.id));
 
-		if (!query) {
-			this.suggestions.set(this.allUsers.filter((u) => !alreadySelectedIds.has(u.id)));
-			return;
-		}
-
-		this.suggestions.set(
-			this.allUsers.filter(
-				(u) =>
-					!alreadySelectedIds.has(u.id) &&
-					(u.pseudo.toLowerCase().includes(query) || u.email.toLowerCase().includes(query)),
-			),
+		const filtered = this.allUsers.filter(
+			(u) =>
+				!alreadySelectedIds.has(u.id) &&
+				(!query || u.pseudo.toLowerCase().includes(query) || u.email.toLowerCase().includes(query)),
 		);
+
+		this.suggestions.set(filtered);
 	}
 
-	onSelect(event: AutoCompleteSelectEvent): void {
-		// La sélection multiple est gérée automatiquement par ngModel
-	}
-
-	onUnselect(): void {
-		// La déselection est gérée automatiquement par ngModel
+	onSelectionChange(): void {
+		this.onChange(this.selectedUsers);
+		this.onTouched();
 	}
 
 	addTwoRandomUsers(): void {
@@ -58,10 +74,13 @@ export class UserAutocompleteDemoComponent {
 		const toAdd = shuffled.slice(0, Math.min(2, shuffled.length));
 
 		this.selectedUsers = [...this.selectedUsers, ...toAdd];
+		this.onChange(this.selectedUsers);
+		this.onTouched();
 	}
 
 	clearAll(): void {
 		this.selectedUsers = [];
+		this.onChange(this.selectedUsers);
+		this.onTouched();
 	}
 }
-
