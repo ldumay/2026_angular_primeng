@@ -2,15 +2,12 @@
 	<label class="mb-2 font-semibold">Utilisateurs legacy</label>
 
 	<p-autocomplete
-		[(ngModel)]="selectedUsers"
+		[formControl]="innerControl"
 		[suggestions]="suggestions()"
 		(completeMethod)="search($event)"
-		(onSelect)="onSelectionChange()"
-		(onUnselect)="onSelectionChange()"
 		optionLabel="pseudo"
 		placeholder="Rechercher par pseudo ou email..."
 		[multiple]="true"
-		[disabled]="isDisabled"
 		fluid
 	>
 		<ng-template #item let-user>

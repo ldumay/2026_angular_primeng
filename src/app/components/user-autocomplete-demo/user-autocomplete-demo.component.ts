@@ -1,5 +1,6 @@
-import { Component, forwardRef, signal } from '@angular/core';
-import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Component, DestroyRef, forwardRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { AutoCompleteCompleteEvent, AutoCompleteModule } from 'primeng/autocomplete';
 import { ButtonModule } from 'primeng/button';
 import { LegacyUser } from '../../core/models/legacy-user.model';
@@ -7,7 +8,7 @@ import { MOCK_LEGACY_USERS } from '../../core/mocks/legacy-users.mock';
 
 @Component({
 	selector: 'app-user-autocomplete-demo',
-	imports: [FormsModule, AutoCompleteModule, ButtonModule],
+	imports: [ReactiveFormsModule, AutoCompleteModule, ButtonModule],
 	templateUrl: './user-autocomplete-demo.component.html',
 	styleUrl: './user-autocomplete-demo.component.scss',
 	providers: [
@@ -19,17 +20,31 @@ import { MOCK_LEGACY_USERS } from '../../core/mocks/legacy-users.mock';
 	],
 })
 export class UserAutocompleteDemoComponent implements ControlValueAccessor {
+	private readonly destroyRef = inject(DestroyRef);
 	private readonly allUsers: LegacyUser[] = MOCK_LEGACY_USERS.map((u) => ({ ...u }));
 
-	selectedUsers: LegacyUser[] = [];
+	/** FormControl interne lié au p-autocomplete — source de vérité unique. */
+	readonly innerControl = new FormControl<LegacyUser[]>([], { nonNullable: true });
+
 	suggestions = signal<LegacyUser[]>([]);
 	isDisabled = false;
 
 	private onChange: (val: LegacyUser[]) => void = () => {};
 	private onTouched: () => void = () => {};
 
+	constructor() {
+		// Propage tout changement venant du p-autocomplete (select / unselect) vers le form parent.
+		this.innerControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((value) => {
+			this.onChange(value);
+			this.onTouched();
+		});
+	}
+
+	// ── CVA ──────────────────────────────────────────────────────────────
+
 	writeValue(value: LegacyUser[] | null): void {
-		this.selectedUsers = value ?? [];
+		// emitEvent: false → pas de boucle infinie vers le parent
+		this.innerControl.setValue(value ?? [], { emitEvent: false });
 	}
 
 	registerOnChange(fn: (val: LegacyUser[]) => void): void {
@@ -42,11 +57,18 @@ export class UserAutocompleteDemoComponent implements ControlValueAccessor {
 
 	setDisabledState(isDisabled: boolean): void {
 		this.isDisabled = isDisabled;
+		if (isDisabled) {
+			this.innerControl.disable({ emitEvent: false });
+		} else {
+			this.innerControl.enable({ emitEvent: false });
+		}
 	}
+
+	// ── Logique métier ──────────────────────────────────────────────────
 
 	search(event: AutoCompleteCompleteEvent): void {
 		const query = event.query.toLowerCase().trim();
-		const alreadySelectedIds = new Set(this.selectedUsers.map((u) => u.id));
+		const alreadySelectedIds = new Set(this.innerControl.value.map((u) => u.id));
 
 		const filtered = this.allUsers.filter(
 			(u) =>
@@ -57,13 +79,9 @@ export class UserAutocompleteDemoComponent implements ControlValueAccessor {
 		this.suggestions.set(filtered);
 	}
 
-	onSelectionChange(): void {
-		this.onChange(this.selectedUsers);
-		this.onTouched();
-	}
-
 	addTwoRandomUsers(): void {
-		const alreadySelectedIds = new Set(this.selectedUsers.map((u) => u.id));
+		const current = this.innerControl.value;
+		const alreadySelectedIds = new Set(current.map((u) => u.id));
 		const available = this.allUsers.filter((u) => !alreadySelectedIds.has(u.id));
 
 		if (available.length === 0) {
@@ -73,14 +91,11 @@ export class UserAutocompleteDemoComponent implements ControlValueAccessor {
 		const shuffled = [...available].sort(() => Math.random() - 0.5);
 		const toAdd = shuffled.slice(0, Math.min(2, shuffled.length));
 
-		this.selectedUsers = [...this.selectedUsers, ...toAdd];
-		this.onChange(this.selectedUsers);
-		this.onTouched();
+		// setValue est SYNCHRONE → le p-autocomplete est mis à jour immédiatement
+		this.innerControl.setValue([...current, ...toAdd]);
 	}
 
 	clearAll(): void {
-		this.selectedUsers = [];
-		this.onChange(this.selectedUsers);
-		this.onTouched();
+		this.innerControl.setValue([]);
 	}
 }
