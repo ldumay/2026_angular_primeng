@@ -29,5 +29,12 @@ export const routes: Routes = [
 				(m) => m.LegacyUsersImportPageComponent,
 			),
 	},
+	{
+		path: 'hello-world',
+		loadComponent: () =>
+			import('./views/hello-world-page/hello-world-page.component').then(
+				(m) => m.HelloWorldPageComponent,
+			),
+	},
 	{ path: '**', redirectTo: '' },
 ];

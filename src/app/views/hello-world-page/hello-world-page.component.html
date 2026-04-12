@@ -1,0 +1,55 @@
+<div class="container">
+  <h1>👋 Hello World!</h1>
+  <p>Bienvenue dans votre application Angular avec PrimeNG.</p>
+
+  <div class="form-section">
+    <h2>🚗 Recherche de voitures</h2>
+
+    <form>
+      <label for="car-search">Sélectionnez des voitures :</label>
+      <div class="search-row">
+        <p-autoComplete
+          id="car-search"
+          [multiple]="true"
+          [unique]="true"
+          [suggestions]="filteredCars()"
+          (completeMethod)="searchCars($event)"
+          [ngModel]="selectedCars()"
+          (ngModelChange)="onSelectionChange($event)"
+          #carSearchModel="ngModel"
+          [optionLabel]="carLabel"
+          placeholder="Tapez une marque, un modèle ou une couleur..."
+          [forceSelection]="true"
+          [showClear]="true"
+          (onClear)="onSelectionChange([])"
+          name="carSearch"
+        >
+          <ng-template let-car pTemplate="item">
+            <span>{{ car.brand }} - {{ car.model }} - {{ car.year }} - {{ car.color }}</span>
+          </ng-template>
+
+          <ng-template let-car pTemplate="selectedItem">
+            <span>{{ car.brand }} - {{ car.model }} - {{ car.year }} - {{ car.color }}</span>
+          </ng-template>
+        </p-autoComplete>
+
+        <p-button icon="pi pi-plus" label="Aléatoire" (onClick)="addRandomCar()" />
+      </div>
+    </form>
+  </div>
+
+  @if (selectedCars().length > 0) {
+    <div class="result-section">
+      <h2>📋 Voitures sélectionnées ({{ selectedCars().length }})</h2>
+      <ul class="car-list">
+        @for (car of selectedCars(); track car.id) {
+          <li>
+            <strong>{{ car.brand }} {{ car.model }}</strong>
+            — {{ car.year }} — {{ car.color }}
+          </li>
+        }
+      </ul>
+    </div>
+  }
+</div>
+
