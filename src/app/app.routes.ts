@@ -36,5 +36,12 @@ export const routes: Routes = [
 				(m) => m.HelloWorldPageComponent,
 			),
 	},
+	{
+		path: 'lazy-table',
+		loadComponent: () =>
+			import('./views/lazy-table-page/lazy-table-page').then(
+				(m) => m.LazyTablePage,
+			),
+	},
 	{ path: '**', redirectTo: '' },
 ];
