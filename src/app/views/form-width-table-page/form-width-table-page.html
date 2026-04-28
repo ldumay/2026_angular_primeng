@@ -1,38 +1,74 @@
 <div class="w-full p-4">
     <h2>Formulaire avec Table de Villes</h2>
+
     <form [formGroup]="form" (ngSubmit)="$event.preventDefault()">
-        <div class="flex flex-wrap gap-4 items-end">
-            <div class="card w-6">
-                <app-select-cities [cities]="cities" formControlName="citySelector"></app-select-cities>
+        <!-- Sélecteur de ville + bouton Ajouter -->
+        <div class="flex flex-wrap gap-4 items-end mb-4">
+            <div>
+                <p-floatlabel variant="on">
+                    <p-select
+                        id="citySelect"
+                        [options]="availableCities"
+                        formControlName="citySelector"
+                        optionLabel="name"
+                        [showClear]="true"
+                        [style]="{ 'min-width': '250px' }"
+                    />
+                    <label for="citySelect">Choisir une ville</label>
+                </p-floatlabel>
             </div>
             <div>
-                <button pButton type="button" label="Ajouter la ville" (click)="addCity()" [disabled]="!form.value.citySelector"></button>
+                <p-button
+                    label="Ajouter la ville"
+                    icon="pi pi-plus"
+                    (onClick)="addCity()"
+                    [disabled]="!form.value.citySelector"
+                />
             </div>
         </div>
-        <div class="card w-full mt-4">
+
+        <!-- Table PrimeNG des villes sélectionnées -->
+        <div class="card w-full">
             <h3>Villes sélectionnées</h3>
-            <table class="p-datatable-table w-full">
-                <thead>
+            <p-table [value]="tableCities" stripedRows dataKey="code">
+                <ng-template pTemplate="header">
                     <tr>
                         <th>Nom</th>
                         <th>Code</th>
-                        <th>Action</th>
+                        <th style="width: 100px; text-align: center">Action</th>
                     </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let city of tableCities">
+                </ng-template>
+                <ng-template pTemplate="body" let-city>
+                    <tr>
                         <td>{{ city.name }}</td>
                         <td>{{ city.code }}</td>
-                        <td>
-                            <button pButton type="button" icon="pi pi-trash" (click)="removeCity(city)" class="p-button-danger p-button-sm"></button>
+                        <td style="text-align: center">
+                            <p-button
+                                icon="pi pi-trash"
+                                severity="danger"
+                                [rounded]="true"
+                                [text]="true"
+                                (onClick)="removeCity(city)"
+                                pTooltip="Supprimer"
+                            />
                         </td>
                     </tr>
-                </tbody>
-            </table>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="3" style="text-align: center; padding: 2rem">
+                            <i class="pi pi-info-circle" style="margin-right: 0.5rem"></i>
+                            Aucune ville sélectionnée. Utilisez le sélecteur ci-dessus pour en ajouter.
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
         </div>
+
+        <!-- Valeur du formulaire (debug) -->
         <div class="card w-full mt-4">
             <h3>Valeur complète du formulaire</h3>
-            <pre>{{ form.value | json }}</pre>
+            <pre style="background: var(--p-surface-100); padding: 1rem; border-radius: 8px; overflow-x: auto">{{ form.value | json }}</pre>
         </div>
     </form>
 </div>
