@@ -10,19 +10,20 @@
       <div class="search-row">
         <p-autoComplete
           id="car-search"
+          #autoComplete
           [multiple]="true"
           [unique]="true"
+          dataKey="id"
           [suggestions]="filteredCars()"
           (completeMethod)="searchCars($event)"
-          [ngModel]="selectedCars()"
-          (ngModelChange)="onSelectionChange($event)"
-          #carSearchModel="ngModel"
+          [formControl]="carControl"
+          (onSelect)="onSelect($event)"
+          (onUnselect)="onUnselect($event)"
           [optionLabel]="carLabel"
           placeholder="Tapez une marque, un modèle ou une couleur..."
           [forceSelection]="true"
           [showClear]="true"
-          (onClear)="onSelectionChange([])"
-          name="carSearch"
+          (onClear)="onClear()"
         >
           <ng-template let-car pTemplate="item">
             <span>{{ car.brand }} - {{ car.model }} - {{ car.year }} - {{ car.color }}</span>
@@ -52,4 +53,3 @@
     </div>
   }
 </div>
-
