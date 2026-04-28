@@ -30,10 +30,10 @@ export const routes: Routes = [
 			),
 	},
 	{
-		path: 'hello-world',
+		path: 'autocomplete-button-sync',
 		loadComponent: () =>
-			import('./views/hello-world-page/hello-world-page.component').then(
-				(m) => m.HelloWorldPageComponent,
+			import('./views/autocomplete-button-sync-page/autocomplete-button-sync-page.component').then(
+				(m) => m.AutocompleteButtonSyncPageComponent,
 			),
 	},
 	{

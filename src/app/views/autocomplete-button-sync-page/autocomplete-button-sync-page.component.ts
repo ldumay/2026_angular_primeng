@@ -6,12 +6,12 @@ import { HelloWorldCar } from '../../core/models/demo/hello-world-car.model';
 import { HelloWorldCarService } from '../../core/services/hello-world-car.service';
 
 @Component({
-  selector: 'app-hello-world-page',
+  selector: 'app-autocomplete-button-sync-page',
   imports: [ReactiveFormsModule, AutoComplete, Button],
-  templateUrl: './hello-world-page.component.html',
-  styleUrl: './hello-world-page.component.scss',
+  templateUrl: './autocomplete-button-sync-page.component.html',
+  styleUrl: './autocomplete-button-sync-page.component.scss',
 })
-export class HelloWorldPageComponent {
+export class AutocompleteButtonSyncPageComponent {
   private carService = inject(HelloWorldCarService);
   private cdr = inject(ChangeDetectorRef);
 
