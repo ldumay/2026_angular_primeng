@@ -43,5 +43,12 @@ export const routes: Routes = [
 				(m) => m.LazyTablePage,
 			),
 	},
+	{
+		path: 'form-width-table',
+		loadComponent: () =>
+			import('./views/form-width-table-page/form-width-table-page').then(
+				(m) => m.FormWidthTablePage,
+			),
+	},
 	{ path: '**', redirectTo: '' },
 ];
