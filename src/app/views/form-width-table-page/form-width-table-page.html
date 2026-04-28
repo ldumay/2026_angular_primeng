@@ -1,3 +1,38 @@
 <div class="w-full p-4">
-    <p>form-width-table-page works!</p>
+    <h2>Formulaire avec Table de Villes</h2>
+    <form [formGroup]="form" (ngSubmit)="$event.preventDefault()">
+        <div class="flex flex-wrap gap-4 items-end">
+            <div class="card w-6">
+                <app-select-cities [cities]="cities" formControlName="citySelector"></app-select-cities>
+            </div>
+            <div>
+                <button pButton type="button" label="Ajouter la ville" (click)="addCity()" [disabled]="!form.value.citySelector"></button>
+            </div>
+        </div>
+        <div class="card w-full mt-4">
+            <h3>Villes sélectionnées</h3>
+            <table class="p-datatable-table w-full">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Code</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let city of tableCities">
+                        <td>{{ city.name }}</td>
+                        <td>{{ city.code }}</td>
+                        <td>
+                            <button pButton type="button" icon="pi pi-trash" (click)="removeCity(city)" class="p-button-danger p-button-sm"></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="card w-full mt-4">
+            <h3>Valeur complète du formulaire</h3>
+            <pre>{{ form.value | json }}</pre>
+        </div>
+    </form>
 </div>
