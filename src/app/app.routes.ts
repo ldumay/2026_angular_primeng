@@ -50,5 +50,12 @@ export const routes: Routes = [
 				(m) => m.FormWidthTablePage,
 			),
 	},
+	{
+		path: 'form-width-table-more',
+		loadComponent: () =>
+			import('./views/form-width-table-more-page/form-width-table-more-page').then(
+				(m) => m.FormWidthTableMorePage,
+			),
+	},
 	{ path: '**', redirectTo: '' },
 ];
