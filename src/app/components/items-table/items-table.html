@@ -1,0 +1,27 @@
+<p-table [value]="rows.controls" dataKey="value.id">
+
+    <ng-template pTemplate="body" let-group let-i="rowIndex">
+
+        <!-- [formGroup] attend un AbstractControl casté en FormGroup -->
+        <tr [formGroup]="asGroup(group)">
+            <td>{{ i + 1 }}</td>
+            <td> 
+                <input pInputText formControlName="name" [class.ng-invalid]="asGroup(group).get('name')?.invalid" />
+            </td>
+            <td> 
+                <p-inputNumber formControlName="qty" [min]="1" />
+            </td>
+            <td>
+                <p-inputNumber formControlName="price" mode="currency" currency="EUR" />
+            </td>
+            <td>
+                <p-select formControlName="status" [options]="statusOptions" />
+            </td>
+            <td>
+                <p-button icon="pi pi-trash" severity="danger" (onClick)="removeRow(i)" />
+            </td>
+        </tr>
+    </ng-template>
+
+</p-table> 
+<!-- Helper de cast TypeScript --> <!-- dans le .ts : asGroup(c) { return c as FormGroup } -->

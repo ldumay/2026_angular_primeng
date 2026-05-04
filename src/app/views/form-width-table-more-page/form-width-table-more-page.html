@@ -1,0 +1,11 @@
+<div class="w-full p-4">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <!-- Champ simple du parent -->
+        <input pInputText formControlName="name" />
+        
+        <!-- Composant B branché via CVA -->
+        <items-table formControlName="items" />
+
+        <p-button type="submit" label="Soumettre" />
+    </form>
+</div>
