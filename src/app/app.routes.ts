@@ -57,5 +57,12 @@ export const routes: Routes = [
 				(m) => m.FormWidthTableMorePage,
 			),
 	},
+	{
+		path: 'locomotives',
+		loadComponent: () =>
+			import('./views/locomotives-page/locomotives-page').then(
+				(m) => m.LocomotivesPage,
+			),
+	},
 	{ path: '**', redirectTo: '' },
 ];

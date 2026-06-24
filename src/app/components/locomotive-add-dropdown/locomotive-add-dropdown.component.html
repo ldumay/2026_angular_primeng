@@ -1,0 +1,50 @@
+<!-- =========================================================================
+  Template : LocomotiveAddDropdownComponent
+  Affiché uniquement en mode édition (contrôlé par la page parente via @if).
+  Permet de générer 10 locomotives aléatoires, d'en sélectionner une
+  dans un dropdown, puis de l'ajouter à la liste.
+  ========================================================================== -->
+
+<div class="add-locomotive-panel">
+	<span class="add-locomotive-panel__title">
+		<i class="pi pi-plus-circle"></i>
+		Ajouter une locomotive
+	</span>
+
+	<div class="add-locomotive-panel__controls">
+		<!-- Étape 1 : Génération de 10 locomotives aléatoires -->
+		<p-button
+			label="Générer 10 locomotives"
+			icon="pi pi-refresh"
+			severity="secondary"
+			(onClick)="generate()"
+		/>
+
+		<!-- Étape 2 : Sélection dans le dropdown (actif après génération) -->
+		<p-select
+			[options]="generatedLocomotives()"
+			[ngModel]="selectedLocomotive()"
+			(ngModelChange)="selectedLocomotive.set($event)"
+			optionLabel="displayName"
+			placeholder="Sélectionner une locomotive..."
+			[disabled]="generatedLocomotives().length === 0"
+			[style]="{ 'min-width': '320px' }"
+			appendTo="body"
+		/>
+
+		<!-- Étape 3 : Ajout de la locomotive sélectionnée -->
+		<p-button
+			label="Ajouter"
+			icon="pi pi-check"
+			[disabled]="!canAdd"
+			(onClick)="addSelected()"
+		/>
+	</div>
+
+	<!-- Message d'aide contextuel -->
+	@if (generatedLocomotives().length === 0) {
+		<small class="add-locomotive-panel__hint">
+			Cliquez sur "Générer" pour obtenir 10 locomotives aléatoires à sélectionner.
+		</small>
+	}
+</div>

@@ -1,0 +1,92 @@
+<!-- =========================================================================
+  Template : LocomitivesListComponent
+  Affiche une table PrimeNG lazy avec pagination.
+  En mode édition : une colonne "Actions" apparaît avec un bouton Supprimer.
+  ========================================================================== -->
+<p-table
+	[value]="locomotives"
+	[lazy]="true"
+	[loading]="loading"
+	[paginator]="true"
+	[rows]="pageSize"
+	[totalRecords]="totalRecords"
+	[rowsPerPageOptions]="rowsPerPageOptions"
+	[showCurrentPageReport]="true"
+	currentPageReportTemplate="Affichage de {first} à {last} sur {totalRecords} locomotives"
+	paginatorPosition="top"
+	dataKey="id"
+	stripedRows
+	(onLazyLoad)="onLazyLoad($event)"
+>
+	<!-- =====================================================================
+	  En-tête du tableau
+	  La colonne "Actions" est conditionnelle au mode édition.
+	  ===================================================================== -->
+	<ng-template pTemplate="header">
+		<tr>
+			<th style="width: 60px">#</th>
+			<th>Série / Classe</th>
+			<th>Constructeur</th>
+			<th style="width: 90px">Année</th>
+			<th style="width: 130px">Traction</th>
+			<th>Pays</th>
+			<!-- Colonne Actions : visible uniquement en mode édition -->
+			@if (editMode) {
+				<th style="width: 110px; text-align: center">Actions</th>
+			}
+		</tr>
+	</ng-template>
+
+	<!-- =====================================================================
+	  Corps du tableau — une ligne par locomotive
+	  ===================================================================== -->
+	<ng-template pTemplate="body" let-loco>
+		<tr>
+			<td>{{ loco.id }}</td>
+			<td>
+				<strong>{{ loco.series }}</strong>
+			</td>
+			<td>{{ loco.manufacturer }}</td>
+			<td>{{ loco.year }}</td>
+
+			<!-- Tag coloré selon le type de traction (via getTypeSeverity) -->
+			<td>
+				<p-tag
+					[value]="loco.type"
+					[severity]="getTypeSeverity(loco.type)"
+				/>
+			</td>
+
+			<td>{{ loco.country }}</td>
+
+			<!-- Bouton Supprimer : visible uniquement en mode édition -->
+			@if (editMode) {
+				<td style="text-align: center">
+					<p-button
+						icon="pi pi-trash"
+						severity="danger"
+						[text]="true"
+						size="small"
+						(onClick)="onRemove(loco.id)"
+						pTooltip="Supprimer cette locomotive"
+						tooltipPosition="left"
+					/>
+				</td>
+			}
+		</tr>
+	</ng-template>
+
+	<!-- =====================================================================
+	  État vide
+	  ===================================================================== -->
+	<ng-template pTemplate="emptymessage">
+		<tr>
+			<td [attr.colspan]="editMode ? 7 : 6" style="text-align: center; padding: 2rem">
+				<i class="pi pi-database" style="font-size: 2rem; color: var(--p-text-muted-color)"></i>
+				<p style="margin-top: 0.5rem; color: var(--p-text-muted-color)">
+					Aucune locomotive dans la liste.
+				</p>
+			</td>
+		</tr>
+	</ng-template>
+</p-table>

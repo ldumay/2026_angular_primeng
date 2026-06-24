@@ -1,0 +1,60 @@
+<!-- =========================================================================
+  Template : LocomotivesPage
+  Page d'orchestration — connecte la facade aux composants enfants.
+
+  Structure :
+  1. En-tête : titre de page + compteur + bouton Mode Édition
+  2. Panneau d'ajout (visible uniquement en mode édition)
+  3. Table lazy paginée
+  ========================================================================== -->
+
+<div class="locomotives-page">
+
+	<!-- =====================================================================
+	  En-tête de page
+	  ===================================================================== -->
+	<div class="locomotives-page__header">
+		<div class="locomotives-page__header-left">
+			<h1 class="locomotives-page__title">
+				<i class="pi pi-truck"></i>
+				Catalogue de Locomotives
+			</h1>
+			<span class="locomotives-page__count">
+				{{ facade.totalRecords() }} locomotive{{ facade.totalRecords() > 1 ? 's' : '' }}
+			</span>
+		</div>
+
+		<!-- Bouton Mode Édition — bascule l'état via la facade -->
+		<p-button
+			[label]="facade.editMode() ? 'Quitter le mode édition' : 'Mode Édition'"
+			[icon]="facade.editMode() ? 'pi pi-times' : 'pi pi-pencil'"
+			[severity]="facade.editMode() ? 'danger' : 'primary'"
+			[outlined]="!facade.editMode()"
+			(onClick)="onToggleEditMode()"
+		/>
+	</div>
+
+	<!-- =====================================================================
+	  Panneau d'ajout (visible uniquement en mode édition)
+	  Le @if évite tout rendu inutile quand le mode édition est inactif.
+	  ===================================================================== -->
+	@if (facade.editMode()) {
+		<app-locomotive-add-dropdown
+			(add)="onAdd($event)"
+		/>
+	}
+
+	<!-- =====================================================================
+	  Table lazy — composant de présentation
+	  Reçoit les données depuis la facade et remonte les événements.
+	  ===================================================================== -->
+	<app-locomotives-list
+		[locomotives]="facade.visiblePage()"
+		[totalRecords]="facade.totalRecords()"
+		[loading]="facade.loading()"
+		[editMode]="facade.editMode()"
+		(lazyLoad)="onLazyLoad($event)"
+		(remove)="onRemove($event)"
+	/>
+
+</div>
