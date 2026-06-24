@@ -1,0 +1,66 @@
+/* Page Locomotives Complexe — styles locaux */
+
+.locomotives-complex-page {
+	padding: 1.5rem;
+	display: flex;
+	flex-direction: column;
+	gap: 1.25rem;
+
+	/* En-tête */
+	&__header {
+		display: flex;
+		align-items: flex-start;
+		justify-content: space-between;
+		flex-wrap: wrap;
+		gap: 1rem;
+
+		&-left {
+			display: flex;
+			flex-direction: column;
+			gap: 0.25rem;
+		}
+	}
+
+	/* Titre */
+	&__title {
+		margin: 0;
+		font-size: 1.5rem;
+		font-weight: 700;
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		color: var(--p-text-color);
+
+		.pi {
+			color: var(--p-primary-color);
+		}
+	}
+
+	/* Badge "Complexe" à côté du titre */
+	&__badge {
+		display: inline-block;
+		font-size: 0.6rem;
+		font-weight: 700;
+		letter-spacing: 0.05em;
+		text-transform: uppercase;
+		padding: 0.15rem 0.4rem;
+		border-radius: 4px;
+		background-color: var(--p-primary-color);
+		color: var(--p-primary-contrast-color);
+		vertical-align: middle;
+	}
+
+	/* Sous-titre avec compteur et info de tri */
+	&__count {
+		font-size: 0.875rem;
+		color: var(--p-text-muted-color);
+	}
+
+	/* Groupe de boutons d'actions */
+	&__actions {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		flex-wrap: wrap;
+	}
+}

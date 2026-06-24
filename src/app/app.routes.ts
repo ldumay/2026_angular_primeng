@@ -64,5 +64,12 @@ export const routes: Routes = [
 				(m) => m.LocomotivesPage,
 			),
 	},
+	{
+		path: 'locomotives-complex',
+		loadComponent: () =>
+			import('./views/locomotives-complex-page/locomotives-complex-page').then(
+				(m) => m.LocomotivesComplexPage,
+			),
+	},
 	{ path: '**', redirectTo: '' },
 ];

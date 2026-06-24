@@ -1,0 +1,27 @@
+:host {
+	display: block;
+}
+
+/*
+  Classes appliquées dynamiquement sur les <tr> selon le statut pending.
+  Utilisation de !important pour surpasser les styles stripedRows de PrimeNG.
+*/
+
+/* Locomotive en attente d'ajout → fond vert pâle */
+::ng-deep .row--pending-add > td {
+	background-color: color-mix(in srgb, var(--p-green-100) 60%, transparent) !important;
+}
+
+/* Locomotive marquée pour suppression → fond rouge pâle + texte rayé */
+::ng-deep .row--pending-remove > td {
+	background-color: color-mix(in srgb, var(--p-red-100) 60%, transparent) !important;
+	text-decoration: line-through;
+	color: var(--p-red-500);
+}
+
+/* ID temporaire affiché différemment */
+.temp-id {
+	color: var(--p-text-muted-color);
+	font-style: italic;
+	cursor: help;
+}

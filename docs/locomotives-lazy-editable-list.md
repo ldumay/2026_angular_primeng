@@ -3,23 +3,25 @@
 ## Liens associés
 - Architecture générale du projet : `docs/architecture-et-mecaniques.md`
 - Reactive Forms et CVA : `docs/reactive-forms-et-cva.md`
+- **Annexe — Glossaire Angular / PrimeNG** : `docs/glossaire-angular-primeng.md`
 
 ---
 
 ## 1) Objectif de la feature
 
-Cette feature ajoute la page `/locomotives` au projet. Elle démontre deux mécaniques
-complémentaires sur un tableau PrimeNG :
+Cette feature regroupe **deux pages dédiées** au catalogue de locomotives, chacune
+illustrant une mécanique progressive de liste lazy éditable :
 
-1. **Chargement lazy (pagination serveur simulée)** : seule la page courante est chargée,
-   le reste reste en mémoire côté service et est tranché (`slice`) à la demande.
-
-2. **Mode édition activable** : un bouton bascule active/désactive un état qui modifie
-   dynamiquement le tableau (affichage d'une colonne Actions + d'un panneau d'ajout).
+| Page | Route | Branche Git | Complexité |
+|---|---|---|---|
+| Locomotives (simple) | `/locomotives` | `feature/locomotives-lazy-editable-list` | Édition immédiate |
+| Locomotives (complexe) | `/locomotives-complex` | `feature/locomotives-complex-editable-list` | Édition différée avec état local/distant |
 
 ---
 
 ## 2) Fichiers créés
+
+### Version simple (`feature/locomotives-lazy-editable-list`)
 
 ```
 src/app/core/models/
@@ -29,30 +31,33 @@ src/app/core/services/
   └── locomotive-mock.service.ts        ← Dataset 100 entrées + génération aléatoire
 
 src/app/states/
-  └── locomotives.facade.ts             ← Facade Signals (état + logique métier)
+  └── locomotives.facade.ts             ← Facade Signals (état + CRUD immédiat)
 
 src/app/components/
-  ├── locomotives-list/
-  │   ├── locomotives-list.component.ts ← Composant présentation (table lazy)
-  │   ├── locomotives-list.component.html
-  │   └── locomotives-list.component.scss
-  └── locomotive-add-dropdown/
-      ├── locomotive-add-dropdown.component.ts ← Composant ajout (génération + dropdown)
-      ├── locomotive-add-dropdown.component.html
-      └── locomotive-add-dropdown.component.scss
+  ├── locomotives-list/                 ← Composant Dumb : table lazy
+  └── locomotive-add-dropdown/          ← Composant Dumb : génération + sélection
 
-src/app/views/locomotives-page/
-  ├── locomotives-page.ts               ← Page orchestratrice (Smart Component)
-  ├── locomotives-page.html
-  └── locomotives-page.scss
-
-docs/
-  └── locomotives-lazy-editable-list.md ← Cette documentation
+src/app/views/
+  └── locomotives-page/                 ← Page Smart : orchestration (version simple)
 ```
 
-Fichiers modifiés :
-- `src/app/app.routes.ts` → ajout de la route `/locomotives`
-- `src/app/app.html` → ajout du bouton de navigation "Locomotives"
+### Version complexe (`feature/locomotives-complex-editable-list`)
+
+```
+src/app/states/
+  └── locomotives-complex.facade.ts     ← Facade complexe : état local/distant, pending, tri
+
+src/app/components/
+  ├── locomotives-complex-list/         ← Composant Dumb : table lazy avec statuts pending
+  └── locomotive-pending-panel/         ← Composant Dumb : résumé des modifications en attente
+
+src/app/views/
+  └── locomotives-complex-page/         ← Page Smart : orchestration (version complexe)
+```
+
+Fichiers modifiés (commun aux deux branches) :
+- `src/app/app.routes.ts` → routes `/locomotives` et `/locomotives-complex`
+- `src/app/app.html` → boutons de navigation "Locomotives" et "Locomotives (complexe)"
 
 ---
 
@@ -69,21 +74,23 @@ export enum LocomotiveType {
 
 export class Locomotive {
   constructor(
-    public id: number,
-    public series: string,       // ex. « BB 7200 »
-    public manufacturer: string, // ex. « Alstom »
+    public id: number,           // négatif = temporaire (ajout local non sauvegardé)
+    public series: string,       // ex. « BB 7200 » — sert aussi à l'ordre alphabétique
+    public manufacturer: string,
     public year: number,
     public type: LocomotiveType,
     public country: string,
   ) {}
 
-  get key(): string { ... }        // clé unique pour PrimeNG dataKey
+  get key(): string { ... }        // clé PrimeNG dataKey
   get displayName(): string { ... } // « Série (Année) — Constructeur »
 }
 ```
 
-Le modèle est indépendant de tout format API/DTO. L'enum `LocomotiveType` évite
-les chaînes magiques et permet un mapping de sévérité PrimeNG dans le composant liste.
+> **Convention d'IDs** : les locomotives en attente d'ajout (version complexe)
+> reçoivent un **ID temporaire négatif** décrémental (−1, −2, …). Cela permet
+> aux composants et à la facade de distinguer l'origine d'un item sans champ dédié.
+> Lors du `save()`, des IDs positifs permanents leur sont assignés.
 
 ---
 
@@ -102,16 +109,13 @@ les chaînes magiques et permet un mapping de sévérité PrimeNG dans le compos
 ### Mécanique du dataset déterministe
 
 ```
-Dataset = 100 locomotives générées via index cyclique :
+Dataset = 100 locomotives via index cyclique :
   series       = SERIES_POOL[i % pool.length]
   manufacturer = MANUFACTURER_POOL[i % pool.length]
   year         = YEAR_MIN + (i * 7) % (YEAR_MAX - YEAR_MIN + 1)
   type         = TYPE_POOL[i % pool.length]
   country      = COUNTRY_POOL[i % pool.length]
 ```
-
-Le coefficient `* 7` pour les années assure une distribution bien répartie
-sur l'intervalle 1920–2024 même avec un petit pool.
 
 ### Mécanique du lazy (getPage)
 
@@ -122,270 +126,365 @@ getPage(offset, size, currentDataset): Observable<{items, total}> {
 }
 ```
 
-**Important** : le dataset passé en paramètre est celui géré par la facade
-(et non le dataset interne immuable). Cela permet de refléter les ajouts/suppressions
-sans nécessiter une re-initialisation du service.
+Le dataset passé est **celui fourni par la facade** (pas le dataset interne du service).
+Cela permet de refléter les ajouts/suppressions sans ré-initialiser le service.
 
 ---
 
-## 5) Facade : `LocomotivesFacade`
+## 5) Facade simple : `LocomotivesFacade`
 
 **Fichier** : `src/app/states/locomotives.facade.ts`
 
-### Pattern utilisé
+### Pattern : Facade + Signals (édition immédiate)
 
-La facade implémente le pattern **Facade + Signals** :
-- Un seul point d'entrée pour toute la logique métier de la page
-- Exposition des signaux en lecture seule pour les composants
-- Mutations uniquement via des méthodes publiques
+Toute modification (ajout, suppression) est **appliquée immédiatement** à l'état unique
+`_allLocomotives`. Il n'y a pas de distinction état local/distant.
 
 ### Signals internes
 
 | Signal | Type | Rôle |
 |---|---|---|
-| `_allLocomotives` | `Locomotive[]` | Source de vérité complète (100 + ajouts) |
-| `_visiblePage` | `Locomotive[]` | Page courante affichée dans le tableau |
-| `_loading` | `boolean` | Spinner de chargement |
-| `_editMode` | `boolean` | Mode édition actif/inactif |
-| `_lastLazyEvent` | `TableLazyLoadEvent \| null` | Dernier événement lazy (pour refresh) |
-
-### Signals publics exposés (lecture seule)
-
-| Signal | Description |
-|---|---|
-| `visiblePage` | Données de la page courante |
-| `totalRecords` | `computed(() => _allLocomotives().length)` |
-| `loading` | Indicateur de chargement |
-| `editMode` | Mode édition |
+| `_allLocomotives` | `Locomotive[]` | Source de vérité unique |
+| `_visiblePage` | `Locomotive[]` | Page courante |
+| `_loading` | `boolean` | Spinner |
+| `_editMode` | `boolean` | Mode édition |
+| `_lastLazyEvent` | `TableLazyLoadEvent \| null` | Mémorisation pour refresh |
 
 ### Méthodes publiques
 
 | Méthode | Rôle |
 |---|---|
-| `initialize()` | Charge le dataset initial depuis le service |
-| `loadPage(event)` | Charge une page lazy (mémorise l'event) |
+| `initialize()` | Charge le dataset initial |
+| `loadPage(event)` | Lazy load (mémorise l'event) |
 | `toggleEditMode()` | Bascule le mode édition |
-| `addLocomotive(l)` | Ajoute + recalcule id + refresh page |
-| `removeLocomotive(id)` | Supprime + refresh page |
-
-### Mécanique de refresh après mutation
-
-```typescript
-// Mémorisation du dernier event pour permettre le refresh
-private _lastLazyEvent: TableLazyLoadEvent | null = null;
-
-loadPage(event: TableLazyLoadEvent): void {
-  this._lastLazyEvent = event;  // mémorisé
-  // ... chargement ...
-}
-
-private _refreshCurrentPage(): void {
-  if (this._lastLazyEvent) {
-    this.loadPage(this._lastLazyEvent); // re-joue avec le dataset muté
-  }
-}
-```
+| `addLocomotive(l)` | Ajoute + refresh |
+| `removeLocomotive(id)` | Supprime + refresh |
 
 ---
 
-## 6) Composant liste : `LocomotivesListComponent`
+## 6) Facade complexe : `LocomotivesComplexFacade`
+
+**Fichier** : `src/app/states/locomotives-complex.facade.ts`
+
+### Concept clé : double état local / distant
+
+```
+┌─────────────────────────────────────────────────────────┐
+│  État DISTANT (_remoteLocomotives)                       │
+│  = ce que le serveur connaît (après save())             │
+├─────────────────────────────────────────────────────────┤
+│  État LOCAL (pending changes)                            │
+│  ├── _pendingToAdd       : locomotives à ajouter         │
+│  └── _pendingToRemoveIds : IDs à supprimer (Set)         │
+├─────────────────────────────────────────────────────────┤
+│  État VISIBLE (_localLocomotives, computed)              │
+│  = remote + pendingToAdd, trié alphabétiquement         │
+│  Les items marqués pour suppression y restent (visuels) │
+└─────────────────────────────────────────────────────────┘
+```
+
+### Tri alphabétique via `computed`
+
+```typescript
+private readonly _localLocomotives = computed<Locomotive[]>(() => {
+  const merged = [...this._remoteLocomotives(), ...this._pendingToAdd()];
+  return merged.sort((a, b) =>
+    a.series.localeCompare(b.series, 'fr', { sensitivity: 'base' })
+  );
+});
+```
+
+Ce signal se recompute automatiquement dès que `_remoteLocomotives` ou `_pendingToAdd`
+changent. Le tri est toujours cohérent, quelle que soit la page affichée.
+
+### Signals publics
+
+| Signal | Description |
+|---|---|
+| `visiblePage` | Page courante |
+| `totalRecords` | `computed(() => _localLocomotives().length)` |
+| `loading` | Spinner |
+| `editMode` | Mode édition |
+| `pendingAdds` | Locomotives en attente d'ajout |
+| `pendingRemovals` | `computed` : locomotives distantes marquées pour suppression |
+| `pendingToRemoveIds` | `computed` : tableau des IDs (pour ngClass dans le template) |
+| `pendingCount` | `computed` : total des changements en attente |
+| `hasPendingChanges` | `computed` : vrai si pendingCount > 0 |
+
+### Méthodes publiques
+
+| Méthode | Rôle |
+|---|---|
+| `initialize()` | Charge le dataset distant initial |
+| `loadPage(event)` | Lazy load depuis `_localLocomotives` |
+| `enterEditMode()` | Active le mode édition |
+| `addPending(l)` | Ajoute à `_pendingToAdd` (ID temporaire négatif) |
+| `removeOrMarkForRemoval(id)` | Si id < 0 → cancel add / Si id > 0 → toggle mark |
+| `save()` | Fusionne pending → état distant + exit edit mode |
+| `discard()` | Annule pending + exit edit mode |
+
+### Mécanique de `save()`
+
+```typescript
+save(): void {
+  const toAdd = this._pendingToAdd();
+  const toRemoveIds = this._pendingToRemoveIds();
+
+  this._remoteLocomotives.update(list => {
+    const afterRemovals = list.filter(l => !toRemoveIds.has(l.id));
+    const maxId = Math.max(...afterRemovals.map(l => l.id), 0);
+    const added = toAdd.map((l, i) =>
+      new Locomotive(maxId + i + 1, l.series, l.manufacturer, l.year, l.type, l.country)
+    );
+    return [...afterRemovals, ...added];
+  });
+
+  this._clearPendingChanges();   // vide toAdd + toRemoveIds + reset counter
+  this._editMode.set(false);
+  this._refreshCurrentPage();
+}
+```
+
+### Mécanique du Toggle de suppression
+
+```typescript
+removeOrMarkForRemoval(id: number): void {
+  if (id < 0) {
+    // Ajout local → suppression directe de la liste pending
+    this._pendingToAdd.update(list => list.filter(l => l.id !== id));
+  } else {
+    // Item distant → toggle du Set (marquer / démarquer)
+    this._pendingToRemoveIds.update(s => {
+      const newSet = new Set(s); // OBLIGATOIRE : nouveau Set pour la réactivité Signal
+      newSet.has(id) ? newSet.delete(id) : newSet.add(id);
+      return newSet;
+    });
+  }
+  this._refreshCurrentPage();
+}
+```
+
+> **Important** : ne jamais muter un `Set` in-place avec un signal Angular.
+> Toujours créer une nouvelle instance pour déclencher la réactivité.
+
+---
+
+## 7) Composants UI
+
+### 7.1 `LocomotivesListComponent` (version simple)
 
 **Fichier** : `src/app/components/locomotives-list/`
 
-### Pattern : Dumb/Presentational Component
+- Dumb Component : `@Input` → `@Output` uniquement
+- Table lazy PrimeNG avec colonne Actions conditionnelle (`@if editMode`)
+- Tag PrimeNG coloré par type de traction (mapping `getTypeSeverity`)
 
-Ce composant **ne connaît ni la facade ni le service**. Il reçoit toutes ses données
-via `@Input` et communique vers le haut via `@Output`.
-
-```
-Inputs  : locomotives, totalRecords, loading, editMode
-Outputs : lazyLoad (TableLazyLoadEvent), remove (number/id)
-```
-
-### Mode édition conditionnel
-
-```html
-<!-- Colonne visible uniquement en mode édition -->
-@if (editMode) {
-  <th>Actions</th>
-}
-
-<!-- Bouton Supprimer par ligne -->
-@if (editMode) {
-  <p-button icon="pi pi-trash" (onClick)="onRemove(loco.id)" />
-}
-```
-
-Le `@if` permet un rendu conditionnel strict (pas de `*ngIf` avec `display:none`).
-
-### Mapping type → sévérité PrimeNG
-
-```typescript
-getTypeSeverity(type: LocomotiveType): 'info' | 'warn' | 'secondary' {
-  switch (type) {
-    case LocomotiveType.ELECTRIC: return 'info';
-    case LocomotiveType.DIESEL:   return 'warn';
-    case LocomotiveType.STEAM:    return 'secondary';
-  }
-}
-```
-
----
-
-## 7) Composant dropdown : `LocomotiveAddDropdownComponent`
+### 7.2 `LocomotiveAddDropdownComponent` (partagé)
 
 **Fichier** : `src/app/components/locomotive-add-dropdown/`
 
-### Flux en deux étapes
+Flux en deux étapes :
+1. "Générer 10" → `service.generateRandom(10)` → peuple le `p-select`
+2. Sélection + "Ajouter" → `add.emit(loco)` → état local réinitialisé
 
-```
-Étape 1 → Clic "Générer 10 locomotives"
-  → service.generateRandom(10)
-  → generatedLocomotives.set(résultat)
-  → selectedLocomotive.set(null)   // réinitialisation de la sélection
+Ce composant est **réutilisé** dans les deux pages (simple et complexe).
 
-Étape 2 → Sélection dans p-select + clic "Ajouter"
-  → add.emit(selectedLocomotive())
-  → réinitialisation de l'état local (generatedLocomotives, selectedLocomotive)
-```
+### 7.3 `LocomotivesComplexListComponent` (version complexe)
 
-### Signals locaux
+**Fichier** : `src/app/components/locomotives-complex-list/`
 
+Différences par rapport à la version simple :
+
+| Fonctionnalité | Simple | Complexe |
+|---|---|---|
+| Coloration des lignes pending | ✗ | ✓ vert/rouge via `ngClass` |
+| Colonne "Statut" | ✗ | ✓ Tag Add/Remove/Saved |
+| Bouton Supprimer | Suppression immédiate | Toggle marquage |
+| Bouton Dé-marquer (undo) | ✗ | ✓ (re-clic ou pi-undo) |
+
+Inputs supplémentaires :
 ```typescript
-readonly generatedLocomotives = signal<Locomotive[]>([]);
-readonly selectedLocomotive   = signal<Locomotive | null>(null);
+@Input() pendingToRemoveIds: number[] = []; // pour row--pending-remove
+@Input() pendingToAddIds: number[]    = []; // pour row--pending-add
 ```
 
-Ces signals sont **purement locaux** à ce composant : ils ne remontent pas dans la facade.
-L'ajout réel au dataset est fait par la facade après réception de l'`@Output`.
+### 7.4 `LocomotivePendingPanelComponent` (version complexe)
+
+**Fichier** : `src/app/components/locomotive-pending-panel/`
+
+- Affiche deux listes : ajouts en attente / suppressions en attente
+- Bouton d'annulation individuelle par item
+- `@Output() cancelAdd` et `@Output() cancelRemoval`
 
 ---
 
-## 8) Page : `LocomotivesPage`
+## 8) Pages orchestratrices
 
-**Fichier** : `src/app/views/locomotives-page/`
+### 8.1 `LocomotivesPage` (Smart, version simple)
 
-### Pattern : Smart/Container Component
+Connecte les `@Output` des composants aux méthodes de `LocomotivesFacade`.
+Les modifications sont **immédiatement** persistées dans l'état unique.
 
-La page orchestre les composants enfants et connecte leurs événements à la facade :
+### 8.2 `LocomotivesComplexPage` (Smart, version complexe)
 
-```typescript
-// Connexion événements → facade
-onLazyLoad(event)    → facade.loadPage(event)
-onRemove(id)         → facade.removeLocomotive(id)
-onAdd(locomotive)    → facade.addLocomotive(locomotive)
-onToggleEditMode()   → facade.toggleEditMode()
+Connecte les composants à `LocomotivesComplexFacade`.
+
+**Boutons d'action selon le mode** :
+
+```
+Mode normal  : [Mode Édition]
+Mode édition : [Sauvegarder (badge: N)] [Annuler les modifications]
 ```
 
-Les composants enfants sont complètement découplés de la facade.
+Le bouton "Sauvegarder" est **désactivé** (`[disabled]`) tant que `hasPendingChanges = false`.
+Son badge affiche le nombre total de changements en attente.
 
-### Affichage conditionnel du panneau d'ajout
-
-```html
-@if (facade.editMode()) {
-  <app-locomotive-add-dropdown (add)="onAdd($event)" />
-}
-```
-
-Le composant dropdown est **créé/détruit** selon le mode édition (pas juste caché),
-ce qui réinitialise son état local automatiquement à chaque désactivation du mode.
+Le `@if (facade.editMode())` dans le template détruit et recrée les composants
+`app-locomotive-add-dropdown` et `app-locomotive-pending-panel` à chaque bascule,
+garantissant la réinitialisation automatique de leur état local.
 
 ---
 
-## 9) Flux de données bout-en-bout
+## 9) Flux de données bout-en-bout (version complexe)
 
-### 9.1 Chargement initial
+### 9.1 Initialisation
 
 ```
-LocomotivesPage.ngOnInit()
+LocomotivesComplexPage.ngOnInit()
   → facade.initialize()
-    → service.getInitialDataset()  → 100 Locomotive[]
-    → _allLocomotives.set(100 items)
+    → service.getInitialDataset() → 100 Locomotive[]
+    → _remoteLocomotives.set(100 items)
+    (pas encore de tri — aucune page demandée)
 
 PrimeNG p-table émet onLazyLoad (first=0, rows=10)
-  → LocomotivesPage.onLazyLoad(event)
   → facade.loadPage(event)
-    → _lastLazyEvent = event
-    → service.getPage(0, 10, allLocomotives)
-      → Observable<{items[0..9], total: 100}>  (après 300 ms)
-    → _visiblePage.set(items)
-    → _loading.set(false)
-  → Tableau affiche les 10 premières locomotives
+    → _localLocomotives() = sort(remote + pendingToAdd)
+    → service.getPage(0, 10, _localLocomotives())
+    → _visiblePage.set(items[0..9]) — 10 premières locos triées par series
 ```
 
-### 9.2 Ajout d'une locomotive
+### 9.2 Ajout en mode édition
 
 ```
-Utilisateur clique "Générer 10 locomotives"
-  → service.generateRandom(10) → 10 Locomotive aléatoires
-  → generatedLocomotives.set(...)
-
-Utilisateur sélectionne une locomotive dans p-select
-  → selectedLocomotive.set(loco)
-
-Utilisateur clique "Ajouter"
-  → add.emit(selectedLocomotive())
-  → LocomotivesPage.onAdd(loco)
-  → facade.addLocomotive(loco)
-    → nextId = max(ids) + 1
-    → _allLocomotives.update(list => [toAdd, ...list])  // insertion en tête
-    → _refreshCurrentPage()  // recharge la page courante
+Clic "Générer 10" → generateRandom(10) → p-select peuplé
+Sélection + "Ajouter"
+  → add.emit(loco)
+  → LocomotivesComplexPage.onAdd(loco)
+  → facade.addPending(loco)
+    → tempId = --_pendingIdCounter   (ex: -1)
+    → _pendingToAdd.update([..., new Locomotive(-1, ...)])
+    → _localLocomotives recomputed (fusion + tri)
+    → _refreshCurrentPage() → service.getPage(...)
+    → Ligne verte apparaît dans le tableau à la position alphabétique correcte
 ```
 
-### 9.3 Suppression d'une locomotive
+### 9.3 Marquage pour suppression (toggle)
 
 ```
-Utilisateur clique pi-trash sur une ligne
-  → LocomotivesListComponent.onRemove(id)
-  → remove.emit(id)
-  → LocomotivesPage.onRemove(id)
-  → facade.removeLocomotive(id)
-    → _allLocomotives.update(list => list.filter(l => l.id !== id))
-    → _refreshCurrentPage()
+Clic pi-trash sur une ligne distante (id = 42)
+  → remove.emit(42)
+  → facade.removeOrMarkForRemoval(42)
+    → id > 0 → toggle Set
+    → _pendingToRemoveIds.update(new Set([..., 42]))
+    → _pendingRemovals recomputed
+    → _pendingToRemoveIds recomputed (tableau)
+    → Ligne rouge + tag "À supprimer" dans le tableau
+    → Panneau pending : item dans la section "Suppressions"
+
+Re-clic pi-undo sur la même ligne
+  → toggle supprime 42 du Set
+    → Ligne redevient normale
+    → Panneau pending : item retiré
+```
+
+### 9.4 Sauvegarde
+
+```
+Clic "Sauvegarder"
+  → facade.save()
+    → _remoteLocomotives mis à jour (suppressions effectives + ajouts avec IDs permanents)
+    → _pendingToAdd.set([])
+    → _pendingToRemoveIds.set(new Set())
+    → _editMode.set(false)
+    → _refreshCurrentPage() → tableau recharge sans indicateurs pending
+```
+
+### 9.5 Annulation
+
+```
+Clic "Annuler les modifications"
+  → facade.discard()
+    → _pendingToAdd.set([])
+    → _pendingToRemoveIds.set(new Set())
+    → _editMode.set(false)
+    → _refreshCurrentPage() → tableau restauré à l'état distant
 ```
 
 ---
 
 ## 10) Guide de reproduction
 
-Pour créer une feature similaire (liste lazy éditable) sur une autre entité :
+Pour créer une feature similaire (liste lazy éditable complexe) sur une autre entité :
 
 ### Étape 1 — Modèle
-Créer `src/app/core/models/<entite>.model.ts` avec une classe et un éventuel enum.
+Classe domaine avec un champ servant au tri alphabétique (ex. `name`, `series`).
+Convention : IDs négatifs = temporaires locaux.
 
 ### Étape 2 — Service mock
-Créer `src/app/core/services/<entite>-mock.service.ts` avec :
-- un dataset privé construit à l'init
-- `getPage(offset, size, currentDataset): Observable<{items, total}>`
-- `generateRandom(count): Entite[]`
-- `getInitialDataset(): Entite[]`
+- `getInitialDataset()` : dataset déterministe
+- `getPage(offset, size, currentDataset)` : lazy simulé
+- `generateRandom(count)` : pour le dropdown
 
-### Étape 3 — Facade
-Créer `src/app/states/<entite>s.facade.ts` avec :
-- `_allItems = signal<Entite[]>([])`
-- `_visiblePage = signal<Entite[]>([])`
-- `_loading = signal(false)`
-- `_editMode = signal(false)`
-- `_lastLazyEvent` pour le refresh
-- Méthodes : `initialize()`, `loadPage()`, `toggleEditMode()`, `addItem()`, `removeItem()`
+### Étape 3 — Facade complexe
+Signals requis :
+- `_remoteItems` : état distant (source de vérité persistée)
+- `_pendingToAdd` : ajouts en attente
+- `_pendingToRemoveIds` : Set des IDs à supprimer
+- `_localItems = computed(...)` : fusion + tri
+- `_pendingIdCounter` : compteur décrémental pour IDs temporaires
 
-### Étape 4 — Composant liste (Dumb)
-Créer le composant avec uniquement `@Input` / `@Output`. Pas de dépendance sur la facade.
+Méthodes clés : `initialize()`, `loadPage()`, `addPending()`, `removeOrMarkForRemoval()`, `save()`, `discard()`.
 
-### Étape 5 — Composant dropdown (Dumb)
-Créer le composant avec état local (signals) + un `@Output add`.
+### Étape 4 — Composant liste complexe
+Inputs supplémentaires : `pendingToRemoveIds`, `pendingToAddIds`.
+Template : `[ngClass]` sur `<tr>` + colonne Statut conditionnelle.
 
-### Étape 6 — Page (Smart)
-Créer la page qui injecte la facade et connecte les `@Output` des composants aux méthodes de la facade.
+### Étape 5 — Composant pending panel
+`@Input() pendingAdds`, `@Input() pendingRemovals`.
+`@Output() cancelAdd`, `@Output() cancelRemoval`.
+
+### Étape 6 — Page Smart
+Boutons différenciés selon `facade.editMode()`.
+`@if (facade.editMode())` pour les composants d'édition (réinitialisation auto).
 
 ### Étape 7 — Routing + Navigation
-Ajouter la route dans `app.routes.ts` (lazy `loadComponent`) et le bouton dans `app.html`.
+Route lazy + bouton toolbar.
 
 ---
 
 ## 11) Points d'attention et limites
 
-- **Persistance** : le dataset est en mémoire uniquement. Un rechargement de page remet les 100 locomotives d'origine.
-- **IDs après ajout** : les ids des locomotives ajoutées sont calculés localement (`max + 1`). En production, l'API retournerait l'id réel.
-- **Génération aléatoire** : les locomotives générées par le dropdown proviennent des mêmes pools de données que le dataset initial. Des doublons de série/constructeur sont possibles.
-- **Tri/filtre lazy** : le tableau est configurable pour le tri côté serveur (les events PrimeNG le supportent nativement) mais cette feature ne l'implémente pas pour rester focalisée sur l'édition.
+- **Persistance** : en mémoire uniquement — rechargement = retour aux 100 locos d'origine.
+- **IDs temporaires** : les IDs négatifs ne doivent pas être utilisés côté serveur. En production, l'API assigne l'ID permanent lors du POST.
+- **Set et réactivité Signal** : toujours créer un nouveau `Set` lors d'une mise à jour — la mutation in-place n'est pas détectée.
+- **Tri et lazy** : le tri est appliqué sur le dataset complet avant pagination. En production, le tri côté serveur est géré via les paramètres de l'API (non implémenté ici).
+- **Suppression marquée vs suppression réelle** : les items marqués pour suppression restent dans `_localLocomotives` jusqu'au `save()`. Le `totalRecords` les inclut donc.
+
+---
+
+## 12) Fichiers à consulter en priorité
+
+**Version simple :**
+- `src/app/views/locomotives-page/locomotives-page.ts`
+- `src/app/states/locomotives.facade.ts`
+
+**Version complexe :**
+- `src/app/views/locomotives-complex-page/locomotives-complex-page.ts`
+- `src/app/states/locomotives-complex.facade.ts`
+- `src/app/components/locomotives-complex-list/locomotives-complex-list.component.ts`
+- `src/app/components/locomotive-pending-panel/locomotive-pending-panel.component.ts`
+
+**Partagés :**
+- `src/app/core/models/locomotive.model.ts`
+- `src/app/core/services/locomotive-mock.service.ts`
+- `src/app/components/locomotive-add-dropdown/locomotive-add-dropdown.component.ts`

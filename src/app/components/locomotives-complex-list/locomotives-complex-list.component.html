@@ -1,0 +1,125 @@
+<!-- =========================================================================
+  Template : LocomotivesComplexListComponent
+  Table PrimeNG lazy avec indicateurs visuels d'état pending.
+
+  Logique de coloration des lignes :
+  - row--pending-add    : fond vert pâle → locomotive en attente d'ajout
+  - row--pending-remove : fond rouge pâle + texte barré → marquée pour suppression
+  - (aucune classe)     : ligne normale
+
+  En mode édition, la colonne "Statut" et la colonne "Actions" apparaissent.
+  ========================================================================== -->
+
+<p-table
+	[value]="locomotives"
+	[lazy]="true"
+	[loading]="loading"
+	[paginator]="true"
+	[rows]="pageSize"
+	[totalRecords]="totalRecords"
+	[rowsPerPageOptions]="rowsPerPageOptions"
+	[showCurrentPageReport]="true"
+	currentPageReportTemplate="Affichage de {first} à {last} sur {totalRecords} locomotives"
+	paginatorPosition="top"
+	dataKey="id"
+	stripedRows
+	(onLazyLoad)="onLazyLoad($event)"
+>
+	<!-- =====================================================================
+	  En-tête
+	  ===================================================================== -->
+	<ng-template pTemplate="header">
+		<tr>
+			<th style="width: 60px">#</th>
+			<!-- Colonne Statut : visible uniquement en mode édition -->
+			@if (editMode) {
+				<th style="width: 130px; text-align: center">Statut</th>
+			}
+			<th>Série / Classe</th>
+			<th>Constructeur</th>
+			<th style="width: 90px">Année</th>
+			<th style="width: 130px">Traction</th>
+			<th>Pays</th>
+			<!-- Colonne Actions : visible uniquement en mode édition -->
+			@if (editMode) {
+				<th style="width: 110px; text-align: center">Actions</th>
+			}
+		</tr>
+	</ng-template>
+
+	<!-- =====================================================================
+	  Corps — une ligne par locomotive avec classe CSS conditionnelle
+	  ===================================================================== -->
+	<ng-template pTemplate="body" let-loco>
+		<!--
+		  Calcul du statut pending pour cette ligne.
+		  La méthode `getPendingStatus()` centralise la logique pour éviter
+		  la duplication dans le template.
+		-->
+		<tr
+			[ngClass]="{
+				'row--pending-add': getPendingStatus(loco.id) === 'add',
+				'row--pending-remove': getPendingStatus(loco.id) === 'remove',
+			}"
+		>
+			<!-- ID : affiché en italique gris pour les IDs temporaires -->
+			<td>
+				<span [class.temp-id]="loco.id < 0" [title]="loco.id < 0 ? 'ID temporaire (non sauvegardé)' : ''">
+					{{ loco.id < 0 ? '—' : loco.id }}
+				</span>
+			</td>
+
+			<!-- Badge de statut pending (mode édition uniquement) -->
+			@if (editMode) {
+				<td style="text-align: center">
+					@if (getPendingStatus(loco.id) === 'add') {
+						<p-tag value="À ajouter" severity="success" icon="pi pi-plus" />
+					} @else if (getPendingStatus(loco.id) === 'remove') {
+						<p-tag value="À supprimer" severity="danger" icon="pi pi-trash" />
+					} @else {
+						<p-tag value="Sauvegardé" severity="secondary" icon="pi pi-check" />
+					}
+				</td>
+			}
+
+			<td>
+				<strong>{{ loco.series }}</strong>
+			</td>
+			<td>{{ loco.manufacturer }}</td>
+			<td>{{ loco.year }}</td>
+			<td>
+				<p-tag [value]="loco.type" [severity]="getTypeSeverity(loco.type)" />
+			</td>
+			<td>{{ loco.country }}</td>
+
+			<!-- Bouton action conditionnel au mode édition -->
+			@if (editMode) {
+				<td style="text-align: center">
+					<p-button
+						[icon]="getRemoveIcon(loco.id)"
+						[severity]="pendingToRemoveIds.includes(loco.id) ? 'warn' : 'danger'"
+						[text]="true"
+						size="small"
+						(onClick)="onRemove(loco.id)"
+						[pTooltip]="getRemoveTooltip(loco.id)"
+						tooltipPosition="left"
+					/>
+				</td>
+			}
+		</tr>
+	</ng-template>
+
+	<!-- =====================================================================
+	  État vide
+	  ===================================================================== -->
+	<ng-template pTemplate="emptymessage">
+		<tr>
+			<td [attr.colspan]="editMode ? 8 : 6" style="text-align: center; padding: 2rem">
+				<i class="pi pi-database" style="font-size: 2rem; color: var(--p-text-muted-color)"></i>
+				<p style="margin-top: 0.5rem; color: var(--p-text-muted-color)">
+					Aucune locomotive dans la liste.
+				</p>
+			</td>
+		</tr>
+	</ng-template>
+</p-table>

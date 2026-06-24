@@ -1,0 +1,82 @@
+<!-- =========================================================================
+  Template : LocomotivePendingPanelComponent
+  Affiche un résumé des modifications en attente de sauvegarde.
+  Visible uniquement en mode édition (contrôlé par @if dans la page parente).
+  ========================================================================== -->
+
+<div class="pending-panel">
+
+	<!-- En-tête avec compteur total -->
+	<div class="pending-panel__header">
+		<i class="pi pi-clock"></i>
+		<span>
+			<strong>{{ totalPending }}</strong>
+			modification{{ totalPending > 1 ? 's' : '' }} en attente de sauvegarde
+		</span>
+	</div>
+
+	<div class="pending-panel__body">
+
+		<!-- ===================================================================
+		  Section Ajouts en attente
+		  =================================================================== -->
+		@if (pendingAdds.length > 0) {
+			<div class="pending-panel__section pending-panel__section--add">
+				<div class="pending-panel__section-title">
+					<i class="pi pi-plus-circle"></i>
+					Ajouts ({{ pendingAdds.length }})
+				</div>
+				<ul class="pending-panel__list">
+					@for (loco of pendingAdds; track loco.id) {
+						<li class="pending-panel__item">
+							<span class="pending-panel__item-name">{{ loco.series }} — {{ loco.manufacturer }} ({{ loco.year }})</span>
+							<p-button
+								icon="pi pi-times"
+								[text]="true"
+								severity="danger"
+								size="small"
+								pTooltip="Annuler cet ajout"
+								(onClick)="cancelAdd.emit(loco.id)"
+							/>
+						</li>
+					}
+				</ul>
+			</div>
+		}
+
+		<!-- ===================================================================
+		  Section Suppressions en attente
+		  =================================================================== -->
+		@if (pendingRemovals.length > 0) {
+			<div class="pending-panel__section pending-panel__section--remove">
+				<div class="pending-panel__section-title">
+					<i class="pi pi-trash"></i>
+					Suppressions ({{ pendingRemovals.length }})
+				</div>
+				<ul class="pending-panel__list">
+					@for (loco of pendingRemovals; track loco.id) {
+						<li class="pending-panel__item">
+							<span class="pending-panel__item-name">{{ loco.series }} — {{ loco.manufacturer }} ({{ loco.year }})</span>
+							<p-button
+								icon="pi pi-undo"
+								[text]="true"
+								severity="warn"
+								size="small"
+								pTooltip="Annuler la suppression"
+								(onClick)="cancelRemoval.emit(loco.id)"
+							/>
+						</li>
+					}
+				</ul>
+			</div>
+		}
+
+		<!-- État vide -->
+		@if (totalPending === 0) {
+			<p class="pending-panel__empty">
+				<i class="pi pi-check-circle"></i>
+				Aucune modification en attente.
+			</p>
+		}
+	</div>
+</div>

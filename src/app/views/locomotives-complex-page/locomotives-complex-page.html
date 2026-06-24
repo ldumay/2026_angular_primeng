@@ -1,0 +1,113 @@
+<!-- =========================================================================
+  Template : LocomotivesComplexPage
+  Page orchestratrice — version complexe avec état local/distant.
+
+  Structure de la page (mode normal) :
+  ┌──────────────────────────────────────────────────────┐
+  │  En-tête : titre + compteur + [Mode Édition]         │
+  ├──────────────────────────────────────────────────────┤
+  │  Table lazy (triée alphabétiquement)                 │
+  └──────────────────────────────────────────────────────┘
+
+  Structure de la page (mode édition) :
+  ┌──────────────────────────────────────────────────────┐
+  │  En-tête : titre + compteur + [Sauvegarder][Annuler] │
+  ├──────────────────────────────────────────────────────┤
+  │  Panneau d'ajout (dropdown génération)               │
+  ├──────────────────────────────────────────────────────┤
+  │  Panneau de résumé (pending changes)                 │
+  ├──────────────────────────────────────────────────────┤
+  │  Table lazy (avec indicateurs de statut)             │
+  └──────────────────────────────────────────────────────┘
+  ========================================================================== -->
+
+<div class="locomotives-complex-page">
+
+	<!-- =====================================================================
+	  En-tête de page
+	  ===================================================================== -->
+	<div class="locomotives-complex-page__header">
+		<div class="locomotives-complex-page__header-left">
+			<h1 class="locomotives-complex-page__title">
+				<i class="pi pi-truck"></i>
+				Catalogue de Locomotives
+				<span class="locomotives-complex-page__badge">Complexe</span>
+			</h1>
+			<span class="locomotives-complex-page__count">
+				{{ facade.totalRecords() }} locomotive{{ facade.totalRecords() > 1 ? 's' : '' }}
+				· Trié alphabétiquement
+			</span>
+		</div>
+
+		<!-- Actions : boutons différents selon le mode -->
+		<div class="locomotives-complex-page__actions">
+
+			@if (!facade.editMode()) {
+				<!-- Mode normal : bouton "Mode Édition" -->
+				<p-button
+					label="Mode Édition"
+					icon="pi pi-pencil"
+					[outlined]="true"
+					(onClick)="onEnterEditMode()"
+				/>
+			} @else {
+				<!-- Mode édition : bouton "Sauvegarder" (avec badge) + "Annuler" -->
+
+				<p-button
+					label="Sauvegarder"
+					icon="pi pi-save"
+					severity="success"
+					[disabled]="!facade.hasPendingChanges()"
+					[badge]="facade.pendingCount() > 0 ? facade.pendingCount().toString() : ''"
+					badgeSeverity="contrast"
+					(onClick)="onSave()"
+					pTooltip="Appliquer toutes les modifications"
+				/>
+
+				<p-button
+					label="Annuler les modifications"
+					icon="pi pi-times"
+					severity="secondary"
+					(onClick)="onDiscard()"
+					pTooltip="Ignorer tous les changements en attente"
+				/>
+			}
+		</div>
+	</div>
+
+	<!-- =====================================================================
+	  Zone de mode édition (visible uniquement quand editMode = true)
+	  @if crée/détruit ces composants → réinitialisation automatique de leur état
+	  ===================================================================== -->
+	@if (facade.editMode()) {
+
+		<!-- Panneau d'ajout -->
+		<app-locomotive-add-dropdown
+			(add)="onAdd($event)"
+		/>
+
+		<!-- Panneau de résumé des modifications en attente -->
+		<app-locomotive-pending-panel
+			[pendingAdds]="facade.pendingAdds()"
+			[pendingRemovals]="facade.pendingRemovals()"
+			(cancelAdd)="onCancelAdd($event)"
+			(cancelRemoval)="onCancelRemoval($event)"
+		/>
+	}
+
+	<!-- =====================================================================
+	  Table lazy complexe
+	  Passe les IDs pending pour le rendu conditionnel des lignes.
+	  ===================================================================== -->
+	<app-locomotives-complex-list
+		[locomotives]="facade.visiblePage()"
+		[totalRecords]="facade.totalRecords()"
+		[loading]="facade.loading()"
+		[editMode]="facade.editMode()"
+		[pendingToRemoveIds]="facade.pendingToRemoveIds()"
+		[pendingToAddIds]="facade.pendingAdds().map(l => l.id)"
+		(lazyLoad)="onLazyLoad($event)"
+		(remove)="onRemove($event)"
+	/>
+
+</div>
