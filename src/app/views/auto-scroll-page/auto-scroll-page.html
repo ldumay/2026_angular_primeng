@@ -1,0 +1,179 @@
+<!-- =========================================================================
+  Template : AutoScrollPage
+  Démo de la synchronisation dropdown → listbox avec auto-scroll.
+
+  Structure :
+  1. En-tête   : titre de page + badge compteur
+  2. Dropdown  : sélection rapide, déclenche le scroll dans la listbox
+  3. Panneau   : listbox (gauche) + formulaire lecture seule (droite)
+  ========================================================================== -->
+
+<div class="auto-scroll-page">
+
+	<!-- =====================================================================
+	  En-tête
+	  ===================================================================== -->
+	<div class="auto-scroll-page__header">
+		<div class="auto-scroll-page__header-left">
+			<h1 class="auto-scroll-page__title">
+				<i class="pi pi-list"></i>
+				Démo Auto-Scroll
+			</h1>
+			<span class="auto-scroll-page__badge">
+				{{ locomotives.length }} locomotives
+			</span>
+		</div>
+		<p class="auto-scroll-page__subtitle">
+			Sélectionnez une locomotive dans le menu déroulant — la liste défilera
+			automatiquement jusqu'à l'élément correspondant.
+		</p>
+	</div>
+
+	<!-- =====================================================================
+	  Dropdown de sélection rapide
+	  ===================================================================== -->
+	<div class="auto-scroll-page__dropdown-wrapper">
+		<label class="auto-scroll-page__label" for="locoDropdown">
+			<i class="pi pi-search"></i>
+			Sélection rapide (auto-scroll)
+		</label>
+		<p-select
+			inputId="locoDropdown"
+			[options]="dropdownOptions"
+			[(ngModel)]="dropdownValue"
+			optionLabel="label"
+			optionValue="value"
+			placeholder="— Choisir une locomotive —"
+			[filter]="true"
+			filterPlaceholder="Rechercher…"
+			[showClear]="true"
+			styleClass="auto-scroll-page__select"
+			(onChange)="onDropdownSelect($event.value)"
+		/>
+	</div>
+
+	<!-- =====================================================================
+	  Panneau principal : Listbox + Formulaire
+	  ===================================================================== -->
+	<div class="auto-scroll-page__panel">
+
+		<!-- Listbox ------------------------------------------------------- -->
+		<div class="auto-scroll-page__list-wrapper">
+			<div class="auto-scroll-page__list-header">
+				<i class="pi pi-database"></i>
+				<span>Liste complète</span>
+			</div>
+
+			<!--
+				p-listbox affiche tous les objets.
+				Les <li> internes sont capturés via #listItem pour le scroll natif.
+			-->
+			<p-listbox
+				[options]="locomotives"
+				[(ngModel)]="listboxValue"
+				optionLabel="displayName"
+				[listStyle]="{ 'max-height': '420px', 'overflow-y': 'auto' }"
+				styleClass="auto-scroll-page__listbox"
+				(onChange)="onListboxSelect($event.value)"
+			>
+				<ng-template let-loco pTemplate="item">
+					<div #listItem class="auto-scroll-page__list-item">
+						<span class="auto-scroll-page__list-item-name">
+							{{ loco.series }}
+						</span>
+						<span class="auto-scroll-page__list-item-meta">
+							{{ loco.manufacturer }} · {{ loco.year }}
+						</span>
+					</div>
+				</ng-template>
+			</p-listbox>
+		</div>
+
+		<!-- Formulaire détail -------------------------------------------- -->
+		<div class="auto-scroll-page__form-wrapper">
+			<div class="auto-scroll-page__form-header">
+				<i class="pi pi-info-circle"></i>
+				<span>Détail de la locomotive</span>
+			</div>
+
+			@if (selected()) {
+				<div class="auto-scroll-page__form">
+
+					<!-- Champ : Série -->
+					<div class="auto-scroll-page__field">
+						<label class="auto-scroll-page__field-label">Série</label>
+						<input
+							pInputText
+							[value]="selected()!.series"
+							[readonly]="true"
+							class="auto-scroll-page__field-input"
+						/>
+					</div>
+
+					<!-- Champ : Constructeur -->
+					<div class="auto-scroll-page__field">
+						<label class="auto-scroll-page__field-label">Constructeur</label>
+						<input
+							pInputText
+							[value]="selected()!.manufacturer"
+							[readonly]="true"
+							class="auto-scroll-page__field-input"
+						/>
+					</div>
+
+					<!-- Champ : Année -->
+					<div class="auto-scroll-page__field">
+						<label class="auto-scroll-page__field-label">Année de mise en service</label>
+						<input
+							pInputText
+							[value]="selected()!.year"
+							[readonly]="true"
+							class="auto-scroll-page__field-input"
+						/>
+					</div>
+
+					<!-- Champ : Pays -->
+					<div class="auto-scroll-page__field">
+						<label class="auto-scroll-page__field-label">Pays d'origine</label>
+						<input
+							pInputText
+							[value]="selected()!.country"
+							[readonly]="true"
+							class="auto-scroll-page__field-input"
+						/>
+					</div>
+
+					<!-- Champ : Type (tag coloré) -->
+					<div class="auto-scroll-page__field">
+						<label class="auto-scroll-page__field-label">Type de traction</label>
+						<div class="auto-scroll-page__field-tag">
+							<p-tag
+								[value]="selected()!.type"
+								[severity]="typeSeverity()"
+								[icon]="typeIcon()"
+							/>
+						</div>
+					</div>
+
+					<!-- Champ : Identifiant -->
+					<div class="auto-scroll-page__field">
+						<label class="auto-scroll-page__field-label">Identifiant interne</label>
+						<input
+							pInputText
+							[value]="'#' + selected()!.id"
+							[readonly]="true"
+							class="auto-scroll-page__field-input auto-scroll-page__field-input--muted"
+						/>
+					</div>
+
+				</div>
+			} @else {
+				<div class="auto-scroll-page__empty">
+					<i class="pi pi-arrow-left auto-scroll-page__empty-icon"></i>
+					<p>Sélectionnez une locomotive pour afficher ses données.</p>
+				</div>
+			}
+		</div>
+
+	</div>
+</div>

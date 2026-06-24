@@ -58,6 +58,13 @@ export const routes: Routes = [
 			),
 	},
 	{
+		path: 'auto-scroll',
+		loadComponent: () =>
+			import('./views/auto-scroll-page/auto-scroll-page').then(
+				(m) => m.AutoScrollPage,
+			),
+	},
+	{
 		path: 'locomotives',
 		loadComponent: () =>
 			import('./views/locomotives-page/locomotives-page').then(
