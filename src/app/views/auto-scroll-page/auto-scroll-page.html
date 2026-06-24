@@ -75,6 +75,7 @@
 				[listStyle]="{ 'max-height': '420px', 'overflow-y': 'auto' }"
 				styleClass="auto-scroll-page__listbox"
 				(onChange)="onListboxSelect($event.value)"
+				(onClick)="onListboxClick($event)"
 			>
 				<ng-template let-loco pTemplate="item">
 					<div #listItem class="auto-scroll-page__list-item">

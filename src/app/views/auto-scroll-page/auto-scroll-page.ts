@@ -131,13 +131,28 @@ export class AutoScrollPage {
 	}
 
 	/**
-	 * Appelé lors d'une sélection dans la listbox.
+	 * Appelé lors d'un changement de sélection dans la listbox (onChange).
 	 * Synchronise le dropdown et met à jour l'état.
 	 */
 	onListboxSelect(loco: Locomotive | null): void {
 		if (!loco) return;
 		this.selected.set(loco);
 		this.dropdownValue = loco;
+	}
+
+	/**
+	 * Appelé lors d'un clic sur un item de la listbox (onClick).
+	 * Gère le cas du re-clic sur l'item déjà sélectionné :
+	 * si l'item cliqué est identique à la sélection courante,
+	 * la sélection est vidée et le formulaire de détail se ferme.
+	 */
+	onListboxClick(event: { option?: Locomotive }): void {
+		if (this.selected()?.id === event.option?.id) {
+			// Désélection : fermeture du formulaire
+			this.selected.set(null);
+			this.listboxValue = null;
+			this.dropdownValue = null;
+		}
 	}
 
 	// -----------------------------------------------------------------------
