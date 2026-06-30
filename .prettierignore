@@ -1,0 +1,8 @@
+# Prettier - Ignore
+
+node_modules
+dist
+coverage
+.angular
+.vscode
+package-lock.json

@@ -1,0 +1,72 @@
+// VSCode - Workspace settings
+{
+    // Taille de la police dans l'éditeur VS Code
+    "editor.fontSize": 12,
+    // Formatter automatiquement à la sauvegarde.
+    "editor.formatOnSave": true,
+    // Formatter également lorsqu'on colle du code.
+    "editor.formatOnPaste": true,
+    // BUG corrigé : "formatOnType" est déconseillé par l'extension Prettier elle-même
+    // (cf. doc officielle prettier-vscode) : il reformate à CHAQUE frappe, ce qui peut
+    // déplacer le curseur de façon imprévisible et ralentir l'éditeur. formatOnSave
+    // suffit largement.
+    "editor.formatOnType": false,
+    // Formatter par défaut avec Prettier.
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    // Corriger automatiquement les erreurs ESLint.
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "always"
+    },
+    // Afficher la règle des 120 caractères.
+    "editor.rulers": [120],
+    // Afficher les espaces.
+    "editor.renderWhitespace": "boundary",
+    // Afficher les caractères de contrôle.
+    "editor.renderControlCharacters": false,
+    // Coloration des paires.
+    "editor.bracketPairColorization.enabled": true,
+    // Guides d'indentation.
+    "editor.guides.indentation": true,
+    // Guides des paires.
+    "editor.guides.bracketPairs": true,
+
+    // Active la nouvelle configuration ESLint (flat config, ESLint v9+)
+    "eslint.useFlatConfig": true,
+    // Validation ESLint.
+    "eslint.validate": ["javascript", "typescript", "html"],
+
+    // Toujours utiliser LF.
+    "files.eol": "\n",
+    // Enlever les espaces inutiles.
+    "files.trimTrailingWhitespace": true,
+    // Ajouter une ligne vide en fin de fichier.
+    "files.insertFinalNewline": true,
+    // Garder le dernier saut de ligne.
+    "files.trimFinalNewlines": false,
+    // Force VS Code à traiter les fichiers .xhtml comme du HTML
+    // "files.associations": {
+    //   "*.xhtml": "html"
+    // },
+
+    // Autorise ESLint à agir comme formateur dans VS Code
+    "eslint.format.enable": true,
+
+    // Formatage HTML : aligne les attributs verticalement
+    "html.format.wrapAttributes": "force-aligned",
+    // Désactive l'indentation du contenu interne HTML
+    "html.format.indentInnerHtml": false,
+    // Active l'indentation spécifique aux templates Handlebars (utile Angular)
+    "html.format.indentHandlebars": true,
+    // Active le support du formatage pour les templates dynamiques
+    "html.format.templating": true,
+    // Supprime les lignes vides automatiques ajoutées autour de certains éléments HTML
+    "html.format.extraLiners": "",
+    // Désactive la validation des scripts JS inline dans HTML
+    // "html.validate.scripts": false
+
+    // Configuration spécifique pour les fichiers SCSS
+    "[css]": {
+        // Utilise Prettier pour formater le SCSS
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+  }

@@ -1,7 +1,45 @@
+// Prettier configuration
+
 {
-  "printWidth": 100,
-  "singleQuote": true,
-  "overrides": [
+    // Longueur maximale d'une ligne.
+    // 120 est un bon compromis pour les écrans actuels.
+    "printWidth": 120,
+
+    // Taille d'indentation (doit rester cohérent avec .editorconfig: indent_size = 4).
+    "tabWidth": 4,
+
+    // BUG corrigé : était à "true" alors que le commentaire disait "espaces" et que
+    // .editorconfig impose "indent_style = space". Les deux outils se contredisaient.
+    // On utilise des espaces, comme .editorconfig.
+    "useTabs": false,
+
+    // Toujours terminer les lignes par ';'
+    "semi": true,
+
+    // Préférer les quotes simples.
+    "singleQuote": true,
+
+    // Guillemets simples également dans les fichiers TSX/JSX.
+    "jsxSingleQuote": true,
+
+    // Virgule finale lorsque possible.
+    // Facilite les diffs Git.
+    "trailingComma": "all",
+
+    // Espaces dans les objets.
+    "bracketSpacing": true,
+
+    // Parenthèses toujours présentes pour les fonctions fléchées.
+    "arrowParens": "always",
+
+    // Toujours ajouter les parenthèses des méthodes.
+    "bracketSameLine": false,
+
+    // Fin de ligne automatique suivant l'OS.
+    "endOfLine": "auto",
+
+    // Formatage des fichiers HTML avec le parser Angular.
+    "overrides": [
     {
       "files": "*.html",
       "options": {
@@ -9,4 +47,4 @@
       }
     }
   ]
-}
+  }
