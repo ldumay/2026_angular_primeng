@@ -4,9 +4,9 @@ import { ButtonModule } from 'primeng/button';
 import { BadgeModule } from 'primeng/badge';
 import { TableLazyLoadEvent } from 'primeng/table';
 import { LocomotivesComplexFacade } from '../../states/locomotives-complex.facade';
-import { LocomotivesComplexListComponent } from '../../components/locomotives-complex-list/locomotives-complex-list.component';
-import { LocomotiveAddDropdownComponent } from '../../components/locomotive-add-dropdown/locomotive-add-dropdown.component';
-import { LocomotivePendingPanelComponent } from '../../components/locomotive-pending-panel/locomotive-pending-panel.component';
+import { LocomotivesComplexList } from '../../components/locomotives-complex-list/locomotives-complex-list';
+import { LocomotiveAddDropdown } from '../../components/locomotive-add-dropdown/locomotive-add-dropdown';
+import { LocomotivePendingPanel } from '../../components/locomotive-pending-panel/locomotive-pending-panel';
 import { Locomotive } from '../../core/models/locomotive.model';
 
 /**
@@ -43,9 +43,9 @@ import { Locomotive } from '../../core/models/locomotive.model';
 		CommonModule,
 		ButtonModule,
 		BadgeModule,
-		LocomotivesComplexListComponent,
-		LocomotiveAddDropdownComponent,
-		LocomotivePendingPanelComponent,
+		LocomotivesComplexList,
+		LocomotiveAddDropdown,
+		LocomotivePendingPanel,
 	],
 	templateUrl: './locomotives-complex-page.html',
 	styleUrl: './locomotives-complex-page.scss',

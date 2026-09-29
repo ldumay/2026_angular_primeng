@@ -1,27 +1,42 @@
 <p-toolbar>
 	<ng-template #start>
-		<strong class="text-lg">Prime Users Manager</strong>
+		<strong class="text-lg">{{ appTitle }}</strong>
 	</ng-template>
-
 	<ng-template #end>
 		<div class="flex flex-wrap gap-2 justify-content-end">
-			<a pButton routerLink="/" label="Accueil" severity="secondary"></a>
-			<a pButton routerLink="/demo-form" label="Demo Form" severity="contrast"></a>
-			<a pButton routerLink="/demo-table" label="Demo Table" severity="help"></a>
-			<a pButton routerLink="/demo-split-button" label="Demo Split Button" severity="warn"></a>
-			<a pButton routerLink="/users" label="Utilisateurs"></a>
-			<a pButton routerLink="/import-users" label="Import Users" severity="info"></a>
-			<a pButton routerLink="/autocomplete-button-sync" label="Autocomplete & Button" severity="success"></a>
-			<a pButton routerLink="/lazy-table" label="Lazy table" severity="contrast"></a>
-			<a pButton routerLink="/form-width-table" label="Form width table" severity="help"></a>
-			<a pButton routerLink="/form-width-table-more" label="Form width table (more)" severity="warn"></a>
-			<a pButton routerLink="/auto-scroll" label="Auto-Scroll" severity="info"></a>
-			<a pButton routerLink="/locomotives" label="Locomotives" severity="success"></a>
-			<a pButton routerLink="/locomotives-complex" label="Locomotives (complexe)" severity="warn"></a>
+			<a pButton
+				[routerLink]="groupedLinks[0].links[0].routerLink"
+				[label]="groupedLinks[0].name"
+				[severity]="groupedLinks[0].severity"
+				(click)="updateCurrentLinks(null)"></a>
+			@for (group of groupedLinks; track group.id) {
+				@if(group.id > 0){
+					<div>
+						<a pButton
+							[label]="group.name"
+							[severity]="group.severity"
+							(click)="updateCurrentLinks(group.links)"></a>
+					</div>
+				}
+			}
 		</div>
 	</ng-template>
 </p-toolbar>
-
+@if(currentLinks && currentLinks.length > 0){
+<p-toolbar>
+	<ng-template #start></ng-template>
+	<ng-template #end>
+		<div class="flex flex-wrap gap-2 justify-content-end">
+			@for (link of currentLinks; track link.routerLink) {
+				<a pButton
+					[routerLink]="link.routerLink"
+					[label]="link.label"
+					[severity]="link.severity"></a>
+			}
+		</div>
+	</ng-template>
+</p-toolbar>
+}
 <main class="app-main">
 	<router-outlet />
 </main>

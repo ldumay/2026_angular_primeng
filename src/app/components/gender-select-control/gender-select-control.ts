@@ -1,0 +1,65 @@
+import { CommonModule } from '@angular/common';
+import { Component, forwardRef, Input } from '@angular/core';
+import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { FloatLabelModule } from 'primeng/floatlabel';
+import { SelectChangeEvent, SelectModule } from 'primeng/select';
+
+interface GenderOption {
+	code: string;
+	label: string;
+}
+
+/** Selecteur de genre reutilisable en CVA pour Reactive Forms. */
+@Component({
+	selector: 'app-gender-select-control',
+	imports: [CommonModule, FormsModule, SelectModule, FloatLabelModule],
+	templateUrl: './gender-select-control.html',
+	styleUrl: './gender-select-control.scss',
+	providers: [
+		{
+			provide: NG_VALUE_ACCESSOR,
+			useExisting: forwardRef(() => GenderSelectControl),
+			multi: true,
+		},
+	],
+})
+export class GenderSelectControl implements ControlValueAccessor {
+	@Input() label = 'Genre';
+	@Input() inputId = 'gender';
+
+	readonly options: GenderOption[] = [
+		{ code: 'male', label: 'Homme' },
+		{ code: 'female', label: 'Femme' },
+	];
+
+	value = '';
+	disabled = false;
+
+	private onChange: (value: string) => void = () => {};
+	private onTouched: () => void = () => {};
+
+	writeValue(value: string | null): void {
+		this.value = value ?? '';
+	}
+
+	registerOnChange(fn: (value: string) => void): void {
+		this.onChange = fn;
+	}
+
+	registerOnTouched(fn: () => void): void {
+		this.onTouched = fn;
+	}
+
+	setDisabledState(isDisabled: boolean): void {
+		this.disabled = isDisabled;
+	}
+
+	onSelectionChange(event: SelectChangeEvent): void {
+		this.value = String(event.value ?? '');
+		this.onChange(this.value);
+	}
+
+	handleBlur(): void {
+		this.onTouched();
+	}
+}

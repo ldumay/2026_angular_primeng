@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { TableLazyLoadEvent } from 'primeng/table';
 import { LocomotivesFacade } from '../../states/locomotives.facade';
-import { LocomotivesListComponent } from '../../components/locomotives-list/locomotives-list.component';
-import { LocomotiveAddDropdownComponent } from '../../components/locomotive-add-dropdown/locomotive-add-dropdown.component';
+import { LocomotivesList } from '../../components/locomotives-list/locomotives-list';
+import { LocomotiveAddDropdown } from '../../components/locomotive-add-dropdown/locomotive-add-dropdown';
 import { Locomotive } from '../../core/models/locomotive.model';
 
 /**
@@ -32,8 +32,8 @@ import { Locomotive } from '../../core/models/locomotive.model';
 	imports: [
 		CommonModule,
 		ButtonModule,
-		LocomotivesListComponent,
-		LocomotiveAddDropdownComponent,
+		LocomotivesList,
+		LocomotiveAddDropdown,
 	],
 	templateUrl: './locomotives-page.html',
 	styleUrl: './locomotives-page.scss',
