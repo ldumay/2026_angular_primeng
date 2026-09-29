@@ -1,0 +1,193 @@
+<div class="card justify-center w-full m-0 p-4">
+    <p-card>
+
+        <h1>Demo Form Detail Page</h1>
+
+        <p-divider align="center" type="dashed">
+            <b>Input Fields</b>
+        </p-divider>
+
+        <div class="flex flex-wrap align-items-center justify-content-center w-full m-0 p-0">
+            <p-floatlabel class="w-4 m-0 p-2" variant="in">
+                <input pInputText id="valueA" [(ngModel)]="valueA"
+                autocomplete="off" fluid />
+                <label for="valueA">Value A (in floatlabel, variant="in")</label>
+            </p-floatlabel>
+
+            <p-floatlabel class="w-4 m-0 p-2" variant="on">
+                <input pInputText id="valueB" [(ngModel)]="valueB"
+                autocomplete="off" fluid />
+                <label for="valueB">Value B (in floatlabel, variant="on")</label>
+            </p-floatlabel>
+
+            <p-iftalabel class="w-4 m-0 p-0">
+                <input pInputText id="valueC" [(ngModel)]="valueC"
+                autocomplete="off" fluid />
+                <label for="valueC">Value C (in iftalabel)</label>
+            </p-iftalabel>
+        </div>
+
+        <div class="flex flex-wrap align-items-center justify-content-center w-full m-0 p-0">
+            <p-inputgroup class="w-4 m-0 p-2">
+                <p-inputgroup-addon>www</p-inputgroup-addon>
+                <input pInputText id="valueD" [(ngModel)]="valueD"
+                autocomplete="off" fluid
+                type="url" placeholder="Website" />
+            </p-inputgroup>
+
+            <p-inputgroup class="w-4 m-0 p-2">
+                <p-inputgroup-addon>
+                    <i class="pi pi-map"></i>
+                </p-inputgroup-addon>
+                <p-select [(ngModel)]="selectedCity" [options]="cities" optionLabel="name" placeholder="City" />
+            </p-inputgroup>
+
+            <p-iftalabel class="w-4 m-0 p-2">
+                <input pInputText id="ssn" [(ngModel)]="valueE" pInputMask="999-99-9999"
+                    autocomplete="off" fluid />
+                <label for="ssn">SSN</label>
+            </p-iftalabel>
+        </div>
+
+        <p-divider align="center" type="dashed">
+            <b>OTP Fields</b>
+        </p-divider>
+
+        <div class="flex flex-wrap align-items-center justify-content-center w-full m-0 p-0">
+            <div class="w-6 m-0 p-2">
+                <label for="valueF">Sample OTP #1</label>
+                <p-inputotp [(ngModel)]="valueF" />
+            </div>
+
+            <div class="w-6 m-0 p-2">
+                <label for="valueG">Sample OTP #2</label>
+                <p-inputotp [(ngModel)]="valueG" [mask]="true" />
+            </div>
+        </div>
+
+        <p-divider align="center" type="dashed">
+            <b>Date Picker Fields</b>
+        </p-divider>
+
+        <div class="flex flex-wrap align-items-center justify-content-center w-full m-0 p-0">
+            <div class="w-2 m-0 p-2"></div>
+
+            <div class="flex flex-wrap gap-2 w-10 m-0 p-2">
+                <div class="w-full">
+                    <label for="icondisplay" class="font-bold block mb-2"> Default Icon </label>
+                </div>
+                <div class="w-full">
+                    <p-datepicker [(ngModel)]="date1" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" />
+
+                    <p-datepicker [(ngModel)]="date2" [iconDisplay]="'input'" [showIcon]="true" [timeOnly]="true" inputId="templatedisplay"
+                        class="m-2">
+                        <ng-template #inputicon let-clickCallBack="clickCallBack">
+                            <i class="pi pi-clock" (click)="clickCallBack($event)"></i>
+                        </ng-template>
+                    </p-datepicker>
+                </div>
+            </div>
+
+            <div class="w-2 m-0 p-2"></div>
+        </div>
+
+        <p-divider align="center" type="dashed">
+            <b>Color Picker Fields</b>
+        </p-divider>
+
+        <div class="flex flex-wrap align-items-center justify-content-center w-full m-0 p-0">
+            <div class="w-3 m-0 p-2">
+                <label for="cp-hex" class="font-bold block mb-2"> HEX </label>
+                <p-colorpicker [(ngModel)]="color" inputId="cp-hex" class="mb-4 mr-2" />
+                <span>{{ color }}</span>
+            </div>
+
+            <div class="w-3 m-0 p-2">
+                <label for="cp-rgb" class="font-bold block mb-2"> RGB </label>
+                <p-colorpicker [(ngModel)]="colorRGB" format="rgb" inputId="cp-rgb" class="mb-4 mr-2" />
+                <span>{{ 'r:' + colorRGB.r + ' g:' + colorRGB.g + ' b:' + colorRGB.b }}</span>
+            </div>
+
+            <div class="w-3 m-0 p-2">
+                <label for="cp-hsb" class="font-bold block mb-2"> HSB </label>
+                <p-colorpicker [(ngModel)]="colorHSB" format="hsb" inputId="cp-hsb" class="mb-4 mr-2" />
+                <span>{{ 'h:' + colorHSB.h + ' s:' + colorHSB.s + ' b:' + colorHSB.b }}</span>
+            </div>
+        </div>
+
+        <p-divider align="center" type="dashed">
+            <b>Checkbox, Toggle and Slider Fields</b>
+        </p-divider>
+
+        <div class="flex flex-wrap align-items-center justify-content-center w-full m-0 p-0">
+            <div class="flex align-items-center justify-content-center w-2 m-0 p-2">
+                <p-checkbox [(ngModel)]="checked" [binary]="true" />
+            </div>
+
+            <div class="flex align-items-center justify-content-center w-2 m-0 p-2">
+                <p-togglebutton [(ngModel)]="toggle1" onLabel="On" offLabel="Off" class="w-24" />
+            </div>
+
+            <div class="flex align-items-center justify-content-center w-3 m-0 p-2">
+                <p-togglebutton [(ngModel)]="toggle2" onLabel="On" offLabel="Off" fluid />
+            </div>
+
+            <div class="flex align-items-center justify-content-center w-2 m-0 p-2">
+                <p-toggleswitch [(ngModel)]="toggle3">
+                    <ng-template #handle let-checked="checked">
+                        <i [ngClass]="['!text-xs', 'pi', checked ? 'pi-check' : 'pi-times']"></i>
+                    </ng-template>
+                </p-toggleswitch>
+            </div>
+
+            <div class="w-3 m-0 p-2">
+                <input type="text" pInputText [(ngModel)]="slider" class="w-full mb-4" />
+                <p-slider [(ngModel)]="slider" class="w-full" />
+            </div>
+        </div>
+
+        <p-divider align="center" type="dashed">
+            <b>Select Button & Rating Fields</b>
+        </p-divider>
+
+        <div class="flex flex-wrap align-items-center justify-content-center w-full m-0 p-0">
+            <div class="w-4 m-0 p-2">
+                <p-selectbutton [options]="paymentOptions" [(ngModel)]="paymentOptions" [multiple]="true" optionLabel="name" optionValue="value" />
+            </div>
+
+            <div class="w-4 m-0 p-2">
+                <p-rating [(ngModel)]="rating" [stars]="10" />
+            </div>
+
+            <div class="w-4 m-0 p-2">
+                <div class="flex items-center">
+                    <p-radiobutton name="pizza" value="Cheese" [(ngModel)]="ingredient" inputId="ingredient1" />
+                    <label for="ingredient1" class="ml-2">Cheese</label>
+                </div>
+                <div class="flex items-center">
+                    <p-radiobutton name="pizza" value="Mushroom" [(ngModel)]="ingredient" inputId="ingredient2" />
+                    <label for="ingredient2" class="ml-2">Mushroom</label>
+                </div>
+                <div class="flex items-center">
+                    <p-radiobutton name="pizza" value="Pepper" [(ngModel)]="ingredient" inputId="ingredient3" />
+                    <label for="ingredient3" class="ml-2">Pepper</label>
+                </div>
+            </div>
+        </div>
+
+        <p-divider align="center" type="dashed">
+            <b>Editor Field</b>
+        </p-divider>
+
+        <div class="flex flex-wrap align-items-center justify-content-center w-full m-0 p-0">
+            <div class="w-full mb-4">
+                <p>NB: Quill is necessary.</p>
+                <pre>npm install quill</pre>
+            </div>
+
+            <div class="w-full mb-4">
+                <p-editor [(ngModel)]="editor" [style]="{ height: '10rem' }" />
+            </div>
+        </div>
+    </p-card>
+</div>

@@ -24,6 +24,12 @@ export const routes: Routes = [
 		.then((m) => m.DemoSplitButtonPage),
 	},
 	{
+		path: 'demo-form-detail',
+		loadComponent: () =>
+			import('./views/demo-form-detail-page/demo-form-detail-page')
+		.then((m) => m.DemoFormDetailPage),
+	},
+	{
 		path: 'import-users',
 		loadComponent: () =>
 			import('./views/legacy-users-import-page/legacy-users-import-page')

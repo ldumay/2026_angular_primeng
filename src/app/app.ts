@@ -29,7 +29,8 @@ export class App {
 
 		const groupeForm:AppLinks[] = [
 			{ routerLink: '/demo-form', label: 'Demo Form', severity: 'contrast' },
-			{ routerLink: '/demo-split-button', label: 'Demo Split Button', severity: 'warn' }
+			{ routerLink: '/demo-split-button', label: 'Demo Split Button', severity: 'warn' },
+			{ routerLink: '/demo-form-detail', label: 'Demo Form Detail', severity: 'help' }
 		];
 		this.groupedLinks.push({ id: count++, name: 'Forms', links: groupeForm, severity: 'secondary' });
 
