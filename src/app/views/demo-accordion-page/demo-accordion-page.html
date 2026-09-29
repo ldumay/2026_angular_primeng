@@ -1,0 +1,47 @@
+<div class="flex w-full m-0 p-4">
+
+    <p-card>
+        <div class="flex w-full m-0 p-2">
+            <h2>Demo Accordion Page</h2>
+        </div>
+
+        <div class="flex w-full m-0 p-2">
+            <p class="">
+                <i>
+                    Accordion is {{ accordionIsOpened() ? 'opened' : 'closed' }}
+                    - Current value: {{ accordionValue() ? accordionValue() : 'none' }}
+                    - Current linked value:
+                    [
+                    {{ accordionValueLinked()?.title ? `"${accordionValueLinked()?.title}"` : 'none' }},
+                    {{ accordionValueLinked()?.content ? `"${accordionValueLinked()?.content?.slice(0, 12)}..."` : 'none' }},
+                    {{ accordionValueLinked()?.author ? `"${accordionValueLinked()?.author}"` : 'none' }}
+                    ]
+                </i>
+            </p>
+        </div>
+
+        <div class="flex w-full m-0 p-2">
+            <p-accordion
+                [(value)]="accordionValue"
+                [multiple]="false"
+                (onOpen)="onOpen($event)"
+                (onClose)="onClose($event)">
+                @for (tab of tabs; track tab.title) {
+                    <p-accordion-panel [value]="tab.id">
+
+                        <p-accordion-header>
+                            {{ tab.title }}
+                        </p-accordion-header>
+
+                        <p-accordion-content>
+                            <p class="m-0">{{ tab.content }}</p>
+                            <span class="author">{{ tab.author }}</span>
+                        </p-accordion-content>
+
+                    </p-accordion-panel>
+                }
+            </p-accordion>
+        </div>
+    </p-card>
+
+</div>
