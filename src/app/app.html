@@ -15,6 +15,14 @@
                     (click)="updateCurrentLinks(null)"
                 ></a>
                 }
+                @for (group of angularGroupedLinks; track group.name) {
+                <a
+                    pButton
+                    [label]="group.name"
+                    [severity]="group.severity"
+                    (click)="updateCurrentLinks(group.links)"
+                ></a>
+                }
             </div>
             <div class="navigation-section navigation-section-primeng">
                 <span class="navigation-section-title">PrimeNG</span>

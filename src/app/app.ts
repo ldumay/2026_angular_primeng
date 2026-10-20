@@ -16,7 +16,14 @@ export class App {
 
     readonly angularLinks: AppLinks[] = [
         { routerLink: '/', label: 'Accueil', severity: 'secondary' },
-        { routerLink: '/logs', label: 'Logs', severity: 'secondary' },
+    ];
+
+    readonly angularGroupedLinks: GroupedAppLinks[] = [
+        {
+            name: 'Essentials',
+            links: [{ routerLink: '/logs', label: 'Logs', severity: 'secondary' }],
+            severity: 'secondary',
+        },
     ];
 
     readonly primeNgGroupedLinks: GroupedAppLinks[] = [

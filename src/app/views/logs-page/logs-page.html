@@ -129,5 +129,32 @@
                 </ul>
             </div>
         </section>
+
+        <section class="console-section documentation-guide" aria-labelledby="logger-service-title">
+            <h2 id="logger-service-title">Le service LoggerService</h2>
+            <p>
+                <code>LoggerService</code> centralise les appels à la console du navigateur. Il est injectable dans
+                toute l'application et évite de disperser des appels directs à <code>console</code>.
+            </p>
+            <div class="guide-topic">
+                <h3>Filtrage selon le niveau actif</h3>
+                <ul>
+                    <li>En développement, le niveau <code>debug</code> autorise toutes les sorties.</li>
+                    <li>En production, le niveau <code>error</code> n'affiche que les erreurs et assertions.</li>
+                    <li>
+                        Le jeton d'injection <code>LOG_LEVEL</code> peut être remplacé pour utiliser
+                        <code>info</code>, <code>warn</code> ou <code>silent</code>.
+                    </li>
+                </ul>
+            </div>
+            <div class="guide-topic">
+                <h3>Utilisation</h3>
+                <p>
+                    Injectez le service puis utilisez <code>debug</code>, <code>info</code>, <code>warn</code> ou
+                    <code>error</code>. Les méthodes avancées, telles que <code>group</code> et <code>time</code>,
+                    ferment systématiquement leur groupe ou chronomètre après l'action exécutée.
+                </p>
+            </div>
+        </section>
     </section>
 </main>
