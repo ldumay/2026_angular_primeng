@@ -1,0 +1,213 @@
+:host {
+    display: block;
+    color: #1f2937;
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        'Segoe UI',
+        sans-serif;
+}
+
+main {
+    display: grid;
+    min-height: calc(100dvh - 7rem);
+    place-items: center;
+    padding: 2rem;
+    background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
+}
+
+.console-demo {
+    width: min(100%, 70rem);
+    padding: 3rem;
+    text-align: center;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 1.5rem;
+    box-shadow: 0 1.5rem 3.75rem rgb(15 23 42 / 12%);
+}
+
+.box-angular-logo {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.angular-logo {
+    width: 10rem;
+    height: auto;
+}
+
+h1 {
+    margin: 1.5rem 0 0.75rem;
+    color: #111827;
+    font-size: clamp(2rem, 5vw, 2.75rem);
+    letter-spacing: -0.04em;
+}
+
+p {
+    max-width: 35rem;
+    margin: 0 auto;
+    color: #4b5563;
+    line-height: 1.6;
+}
+
+.log-profile {
+    margin-top: 1rem;
+    color: #1e40af;
+    font-size: 0.9375rem;
+}
+
+.console-section {
+    margin-top: 2.5rem;
+}
+
+.console-section + .console-section {
+    padding-top: 2rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.console-section h2 {
+    margin: 0;
+    color: #1f2937;
+    font-size: 1.25rem;
+}
+
+.console-methods {
+    margin-top: 1rem;
+    overflow-x: auto;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.75rem;
+}
+
+table {
+    width: 100%;
+    min-width: 34rem;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+caption,
+th,
+td {
+    padding: 0.75rem 1rem;
+}
+
+caption {
+    color: #1f2937;
+    font-weight: 700;
+    text-align: left;
+}
+
+th,
+td {
+    border-top: 1px solid #e2e8f0;
+    vertical-align: top;
+}
+
+th {
+    color: #374151;
+    background: #f8fafc;
+    font-size: 0.875rem;
+}
+
+td,
+.guide-topic ul {
+    color: #4b5563;
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+code {
+    color: #4338ca;
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+    font-size: 0.8125rem;
+    font-weight: 700;
+}
+
+.log-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.log-button {
+    padding: 0.75rem 1rem;
+    border: 0;
+    border-radius: 0.625rem;
+    color: #fff;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    transition:
+        transform 150ms ease,
+        box-shadow 150ms ease;
+}
+
+.log-button:hover {
+    box-shadow: 0 0.5rem 1rem rgb(15 23 42 / 18%);
+    transform: translateY(-2px);
+}
+
+.log-button:focus-visible {
+    outline: 3px solid #93c5fd;
+    outline-offset: 3px;
+}
+
+.log {
+    background: #2563eb;
+}
+.info {
+    background: #0891b2;
+}
+.warn {
+    background: #d97706;
+}
+.error {
+    background: #dc2626;
+}
+.debug {
+    background: #6d28d9;
+}
+.advanced {
+    background: #475569;
+}
+
+.documentation-guide {
+    text-align: left;
+}
+
+.documentation-guide > p,
+.guide-topic {
+    max-width: none;
+    margin-top: 1rem;
+}
+
+.guide-topic h3 {
+    margin: 0;
+    color: #374151;
+    font-size: 1rem;
+}
+
+.guide-topic ul {
+    display: grid;
+    gap: 0.5rem;
+    margin: 0.75rem 0 0;
+    padding-left: 1.25rem;
+}
+
+@media (max-width: 32rem) {
+    main {
+        padding: 1rem;
+    }
+
+    .console-demo {
+        padding: 2rem 1.25rem;
+    }
+
+    .log-button {
+        width: 100%;
+    }
+}

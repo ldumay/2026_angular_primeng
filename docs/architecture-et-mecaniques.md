@@ -1,13 +1,16 @@
 # Documentation technique - Architecture et mecaniques du projet
 
 ## Liens de documentation associee
+
 - Reactive Forms et CVA : `docs/reactive-forms-et-cva.md`
 - Troubleshooting : `docs/troubleshooting.md`
 
 ## 1) Objectif de cette documentation
+
 Ce document decrit de maniere simple et detaillee les outils, couches techniques et flux de donnees utilises dans le projet Angular 21 + PrimeNG 21.
 
 Il couvre :
+
 - la structure des pages
 - les modeles metier
 - les DTO et le mapper
@@ -16,6 +19,7 @@ Il couvre :
 - la mecanique reactive entre toutes les parties
 
 ## 2) Stack et outils utilises
+
 - Framework : Angular 21 (standalone components)
 - UI : PrimeNG 21
 - Theme PrimeNG : Aura (`@primeuix/themes`)
@@ -26,12 +30,14 @@ Il couvre :
 - Donnees de demonstration : API `https://randomuser.me/api`
 
 Fichiers de reference :
+
 - `package.json`
 - `src/main.ts`
 - `src/app/app.config.ts`
 - `src/styles.scss`
 
 ## 3) Vue d'ensemble de l'architecture
+
 Le projet suit une separation claire des responsabilites :
 
 - Presentation (Vue) : pages + composants PrimeNG
@@ -39,6 +45,7 @@ Le projet suit une separation claire des responsabilites :
 - Donnees (Model + Service + DTO/Mapper) : models, service HTTP, DTO API et mapper
 
 Structure principale :
+
 - `src/app/views/` : pages de l'application (`home`, `users-pages`)
 - `src/app/components/` : composants reutilisables (`users-list`, `user-form`, `adress-control`, `profession-select-control`, `gender-select-control`, `car-select-control`)
 - `src/app/core/models/` : modeles domaine (`User`, `Address`, `Car`, `CarBrand`)
@@ -48,34 +55,53 @@ Structure principale :
 - `src/app/states/` : facade d'etat applicatif
 
 ## 4) Navigation et pages
+
 ### 4.1 Routing
+
 Le routing est defini dans `src/app/app.routes.ts` :
+
 - `/` -> `HomePageComponent`
 - `/users` -> `UsersPageComponent`
+- `/logs` -> `LogsPage` (chargement paresseux)
 - `**` -> redirection vers `/`
 
 ### 4.2 Shell applicatif
+
 `src/app/app.ts` + `src/app/app.html` :
+
 - toolbar PrimeNG globale
 - boutons de navigation vers Accueil / Utilisateurs
 - zone de rendu via `<router-outlet />`
 
 ### 4.3 Page d'accueil
+
 `src/app/views/home/home-page.component.ts` + `.html` :
+
 - titre applicatif
 - slogan motivationnel
 - description du projet
 - lien d'acces a la page utilisateurs
 
 ### 4.4 Page utilisateurs
+
 `src/app/views/users-pages/users-page.component.ts` :
+
 - orchestration de 2 blocs :
-  - gauche : liste utilisateurs (`app-users-list`)
-  - droite : formulaire creation/edition (`app-user-form`)
+    - gauche : liste utilisateurs (`app-users-list`)
+    - droite : formulaire creation/edition (`app-user-form`)
 - branche les evenements UI sur la facade (`load`, `select`, `create`, `update`, `remove`, `clearAll`)
 
+### 4.4.1 Page Logs
+
+`src/app/views/logs-page/` fournit une démonstration des sorties `console` et de leurs actions.
+Le service `src/app/core/logging/logger.service.ts` filtre les messages : tous les niveaux en
+développement, uniquement `error` en production. Le bouton **Logs** de la barre de menu y accède
+directement.
+
 ## 5) Couche donnees : Modeles, DTO, Mapper, Service
+
 ### 5.1 Modeles domaine
+
 - `src/app/core/models/user.model.ts`
 - `src/app/core/models/address.model.ts`
 
@@ -84,45 +110,58 @@ Ces classes representent les objets manipules dans l'application (independants d
 Le modele `User` contient egalement `gender`, `profession` (code selectionne) et `car`.
 
 ### 5.2 DTO API
+
 `src/app/core/dto/user-api.dto.ts` decrit le format de `randomuser.me` :
+
 - `UserApiDto`
 - sous-DTO (`name`, `location`, `login`, etc.)
 - `UserApiListResponseDto` pour la reponse liste
 
 ### 5.3 Mapper
+
 `src/app/core/mappers/user.mapper.ts` convertit `UserApiDto` vers `User` :
+
 - adaptation des noms de champs
 - transformation de la rue (`number + name`)
 - conversion de l'identifiant UUID en entier (`uuidToNumericId`) pour simplifier la gestion locale
 
 ### 5.4 Service HTTP
+
 `src/app/core/services/user-api.service.ts` :
+
 - centralise l'appel HTTP `GET https://randomuser.me/api/?results=20&nat=fr`
 - applique le mapper pour retourner `Observable<User[]>`
 - isole la couche presentation de la logique d'acces API
 
 ### 5.5 Service mock de professions
+
 `src/app/core/services/profession-mock.service.ts` :
+
 - expose une liste mockee de professions
 - retourne des options `code/label` via `listProfessions()`
 - alimente le composant CVA `app-profession-select-control`
 
 ### 5.6 Service mock de voitures
+
 `src/app/core/services/car-mock.service.ts` :
+
 - expose une liste mockee d'instances `Car`
 - chaque voiture contient `brand` (instance `CarBrand`), `model`, `motorization`, `year`
 - alimente le composant CVA `app-car-select-control`
 
 ## 6) Couche metier : facade reactive
+
 `src/app/states/users.facade.ts` est la couche pivot.
 
 Responsabilites :
+
 - stocker l'etat utilisateurs en signal (`usersState`)
 - stocker l'utilisateur selectionne (`selectedUserIdState`)
 - exposer des valeurs derivees (`users`, `selectedUser`)
 - gerer les operations CRUD cote client
 
 Mecaniques :
+
 - `load()` : charge les utilisateurs via le service API
 - `select(user)` : memorise la selection pour edition
 - `create(user)` : ajoute localement un utilisateur avec id local incremental
@@ -131,18 +170,23 @@ Mecaniques :
 - `clearAll()` : vide liste + selection
 
 Important :
+
 - le CRUD est local apres chargement initial (pas de POST/PUT/DELETE serveur)
 - ce choix est coherent avec une API de demo qui n'offre pas une persistance metier complete
 
 ## 7) Composants et mecaniques UI
+
 ### 7.1 Liste utilisateurs
+
 Fichiers :
+
 - `src/app/components/users-list/users-list.component.ts`
 - `src/app/components/users-list/users-list.component.html`
 
 Role : composant de presentation de la table.
 
 Fonctionnalites :
+
 - affichage via `p-table`
 - pagination (`rows`, `rowsPerPageOptions`)
 - tri multi-colonnes (`sortMode="multiple"`)
@@ -151,11 +195,14 @@ Fonctionnalites :
 - action globale : vider la liste
 
 Communication :
+
 - entrees (`@Input`) : `users`
 - sorties (`@Output`) : `edit`, `remove`, `clearAll`
 
 ### 7.2 Formulaire utilisateur (Reactive Forms)
+
 Fichiers :
+
 - `src/app/components/user-form/user-form.component.ts`
 - `src/app/components/user-form/user-form.component.html`
 
@@ -164,66 +211,82 @@ Role : creation/edition/suppression utilisateur.
 Voir aussi la documentation detaillee du formulaire : `docs/reactive-forms-et-cva.md`.
 
 Mecaniques principales :
+
 - `FormGroup` type avec controles : `firstName`, `lastName`, `email`, `password`, `profession`, `gender`, `car`, `address`
 - validations : `required`, `email`, `minLength(8)`
 - mode creation vs edition pilote par `selectedUser`
 - `ngOnChanges` pre-remplit le formulaire en edition
 - mot de passe :
-  - obligatoire en creation
-  - optionnel en edition (conserve l'ancien si vide)
+    - obligatoire en creation
+    - optionnel en edition (conserve l'ancien si vide)
 - `submit()` emet `create` ou `update`
 - `duplicateCurrent()` emet `create` en mode edition pour dupliquer l'utilisateur selectionne
 - `clear()` reinitialise formulaire + deselection
 - `deleteCurrent()` emet suppression puis nettoyage
 
 ### 7.3 Composant adresse reutilisable (CVA)
+
 Fichier :
+
 - `src/app/components/adress-control/address-control.component.ts`
 
 Role : encapsuler les champs d'adresse comme controle reutilisable compatible Reactive Forms.
 
 Mecaniques CVA :
+
 - `writeValue` : injecte une valeur externe dans le composant
 - `registerOnChange` : propage les changements vers le parent
 - `registerOnTouched` : prepare la propagation de l'etat touched
 - `setDisabledState` : synchronise l'etat active/desactive
 
 Utilisation :
+
 - integre dans `UserFormComponent` via `formControlName="address"`
 - detail de l'implementation CVA dans `docs/reactive-forms-et-cva.md`
 
 ### 7.4 Composant profession reutilisable (CVA)
+
 Fichier :
+
 - `src/app/components/profession-select-control/profession-select-control.component.ts`
 
 Role : encapsuler la selection de profession comme controle reutilisable compatible Reactive Forms.
 
 Mecaniques CVA :
+
 - `writeValue` : synchronise la valeur actuelle de la profession
 - `registerOnChange` : remonte la profession selectionnee au parent
 - `registerOnTouched` : propage l'etat touched au blur
 - `setDisabledState` : synchronise l'etat active/desactive
 
 Source de donnees :
+
 - charge les options via `ProfessionMockService`
 
 ### 7.5 Composant genre reutilisable (CVA)
+
 Fichier :
+
 - `src/app/components/gender-select-control/gender-select-control.component.ts`
 
 Role : encapsuler la selection de genre (`male`/`female`) dans un controle CVA reutilisable.
 
 ### 7.6 Composant voiture reutilisable (CVA)
+
 Fichier :
+
 - `src/app/components/car-select-control/car-select-control.component.ts`
 
 Role : encapsuler la selection d'une voiture (instance de classe `Car`) dans un controle CVA reutilisable.
 
 Source de donnees :
+
 - charge les options via `CarMockService`
 
 ## 8) Flux de donnees bout-en-bout
+
 ### 8.1 Chargement initial
+
 1. `UsersPageComponent.ngOnInit()` appelle `facade.load()`.
 2. `UsersFacade.load()` appelle `UserApiService.listUsers()`.
 3. Le service interroge l'API et mappe les DTO en `User`.
@@ -231,6 +294,7 @@ Source de donnees :
 5. La liste (`app-users-list`) se met a jour automatiquement via signal.
 
 ### 8.2 Edition
+
 1. Clic "modifier" dans la table -> `edit.emit(user)`.
 2. `UsersPageComponent.onEdit()` appelle `facade.select(user)`.
 3. `selectedUser` change -> `UserFormComponent.ngOnChanges()` patch le formulaire.
@@ -238,6 +302,7 @@ Source de donnees :
 5. La table est reactive et affiche la nouvelle valeur.
 
 ### 8.3 Creation
+
 1. Formulaire vide + validation OK.
 2. `create.emit(user)` -> `facade.create(user)`.
 3. L'utilisateur cree contient aussi `profession`, `gender` et `car`.
@@ -245,13 +310,16 @@ Source de donnees :
 5. Reset formulaire + clear selection.
 
 ### 8.4 Suppression
+
 1. Suppression depuis la table ou le formulaire.
 2. `facade.remove(id)` retire l'entree du store.
 3. Si l'utilisateur supprime etait selectionne, la selection est annulee.
 4. Le formulaire est nettoye.
 
 ## 9) Correspondance avec la demande initiale
+
 ### 9.1 Points bien couverts
+
 - Angular 21 + PrimeNG 21
 - architecture separee pages / composants / core / state
 - modeles + DTO + mapper
@@ -261,13 +329,16 @@ Source de donnees :
 - page d'accueil avec titre, slogan, description, lien
 
 ### 9.2 Ecarts a corriger pour coller 100% au cahier des charges
+
 - La liste n'affiche actuellement pas l'email (seulement nom/prenom).
 - Le tri est configure pour nom/prenom/genre, pas `email`.
 - Les validations d'adresse sont minimales (pas de messages d'erreur dedies).
 - Cote CVA adresse, `registerOnTouched` est defini mais aucun evenement `blur` ne declenche encore `onTouched`.
 
 ## 10) Guide rapide d'extension
+
 Pour evoluer sans casser l'architecture :
+
 - garder les transformations de donnees dans `mappers/`
 - garder l'acces API brut dans `services/`
 - centraliser l'etat de page et les regles metier dans `states/users.facade.ts`
@@ -275,6 +346,7 @@ Pour evoluer sans casser l'architecture :
 - garder les composants `components/` orientee presentation/reutilisation
 
 ## 11) Fichiers a consulter en priorite
+
 - `src/app/views/users-pages/users-page.component.ts`
 - `src/app/states/users.facade.ts`
 - `src/app/core/services/user-api.service.ts`

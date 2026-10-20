@@ -1,42 +1,51 @@
 <p-toolbar>
-	<ng-template #start>
-		<strong class="text-lg">{{ appTitle }}</strong>
-	</ng-template>
-	<ng-template #end>
-		<div class="flex flex-wrap gap-2 justify-content-end">
-			<a pButton
-				[routerLink]="groupedLinks[0].links[0].routerLink"
-				[label]="groupedLinks[0].name"
-				[severity]="groupedLinks[0].severity"
-				(click)="updateCurrentLinks(null)"></a>
-			@for (group of groupedLinks; track group.id) {
-				@if(group.id > 0){
-					<div>
-						<a pButton
-							[label]="group.name"
-							[severity]="group.severity"
-							(click)="updateCurrentLinks(group.links)"></a>
-					</div>
-				}
-			}
-		</div>
-	</ng-template>
+    <ng-template #start>
+        <strong class="text-lg">{{ appTitle }}</strong>
+    </ng-template>
+    <ng-template #end>
+        <div class="flex flex-wrap gap-2 justify-content-end">
+            <a
+                pButton
+                [routerLink]="groupedLinks[0].links[0].routerLink"
+                [label]="groupedLinks[0].name"
+                [severity]="groupedLinks[0].severity"
+                (click)="updateCurrentLinks(null)"
+            ></a>
+            @for (group of groupedLinks; track group.id) { @if(group.id > 0){
+            <div>
+                @if (group.direct) {
+                <a
+                    pButton
+                    [routerLink]="group.links[0].routerLink"
+                    [label]="group.name"
+                    [severity]="group.severity"
+                    (click)="updateCurrentLinks(null)"
+                ></a>
+                } @else {
+                <a
+                    pButton
+                    [label]="group.name"
+                    [severity]="group.severity"
+                    (click)="updateCurrentLinks(group.links)"
+                ></a>
+                }
+            </div>
+            } }
+        </div>
+    </ng-template>
 </p-toolbar>
 @if(currentLinks && currentLinks.length > 0){
 <p-toolbar>
-	<ng-template #start></ng-template>
-	<ng-template #end>
-		<div class="flex flex-wrap gap-2 justify-content-end">
-			@for (link of currentLinks; track link.routerLink) {
-				<a pButton
-					[routerLink]="link.routerLink"
-					[label]="link.label"
-					[severity]="link.severity"></a>
-			}
-		</div>
-	</ng-template>
+    <ng-template #start></ng-template>
+    <ng-template #end>
+        <div class="flex flex-wrap gap-2 justify-content-end">
+            @for (link of currentLinks; track link.routerLink) {
+            <a pButton [routerLink]="link.routerLink" [label]="link.label" [severity]="link.severity"></a>
+            }
+        </div>
+    </ng-template>
 </p-toolbar>
 }
 <main class="app-main">
-	<router-outlet />
+    <router-outlet />
 </main>
