@@ -1,8 +1,42 @@
 :host {
-	display: block;
+    display: block;
 }
 
 .app-main {
-	max-width: 100%;
-	margin: 0 auto;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.navigation-sections,
+.navigation-section {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.navigation-sections {
+    justify-content: flex-end;
+}
+
+.navigation-section-primeng {
+    padding-left: 1rem;
+    border-left: 1px solid var(--p-content-border-color);
+}
+
+.navigation-section-title {
+    color: var(--p-text-muted-color);
+    font-size: 0.875rem;
+    font-weight: 700;
+}
+
+@media (max-width: 48rem) {
+    .navigation-sections {
+        justify-content: flex-start;
+    }
+
+    .navigation-section-primeng {
+        padding-left: 0;
+        border-left: 0;
+    }
 }

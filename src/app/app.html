@@ -3,25 +3,22 @@
         <strong class="text-lg">{{ appTitle }}</strong>
     </ng-template>
     <ng-template #end>
-        <div class="flex flex-wrap gap-2 justify-content-end">
-            <a
-                pButton
-                [routerLink]="groupedLinks[0].links[0].routerLink"
-                [label]="groupedLinks[0].name"
-                [severity]="groupedLinks[0].severity"
-                (click)="updateCurrentLinks(null)"
-            ></a>
-            @for (group of groupedLinks; track group.id) { @if(group.id > 0){
-            <div>
-                @if (group.direct) {
+        <nav class="navigation-sections" aria-label="Navigation principale">
+            <div class="navigation-section">
+                <span class="navigation-section-title">Angular</span>
+                @for (link of angularLinks; track link.routerLink) {
                 <a
                     pButton
-                    [routerLink]="group.links[0].routerLink"
-                    [label]="group.name"
-                    [severity]="group.severity"
+                    [routerLink]="link.routerLink"
+                    [label]="link.label"
+                    [severity]="link.severity"
                     (click)="updateCurrentLinks(null)"
                 ></a>
-                } @else {
+                }
+            </div>
+            <div class="navigation-section navigation-section-primeng">
+                <span class="navigation-section-title">PrimeNG</span>
+                @for (group of primeNgGroupedLinks; track group.name) {
                 <a
                     pButton
                     [label]="group.name"
@@ -30,8 +27,7 @@
                 ></a>
                 }
             </div>
-            } }
-        </div>
+        </nav>
     </ng-template>
 </p-toolbar>
 @if(currentLinks && currentLinks.length > 0){

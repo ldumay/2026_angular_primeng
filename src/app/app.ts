@@ -14,75 +14,68 @@ import { RouterLink } from '@angular/router';
 export class App {
     readonly appTitle: string = 'Demo: Angular/PrimeNG 21';
 
-    groupedLinks: GroupedAppLinks[] = [];
+    readonly angularLinks: AppLinks[] = [
+        { routerLink: '/', label: 'Accueil', severity: 'secondary' },
+        { routerLink: '/logs', label: 'Logs', severity: 'secondary' },
+    ];
+
+    readonly primeNgGroupedLinks: GroupedAppLinks[] = [
+        {
+            name: 'Forms',
+            links: [
+                { routerLink: '/demo-form', label: 'Demo Form', severity: 'contrast' },
+                { routerLink: '/demo-split-button', label: 'Demo Split Button', severity: 'warn' },
+                { routerLink: '/demo-form-detail', label: 'Demo Form Detail', severity: 'help' },
+            ],
+            severity: 'secondary',
+        },
+        {
+            name: 'AutoCompletes',
+            links: [{ routerLink: '/autocomplete-button-sync', label: 'Autocomplete & Button', severity: 'success' }],
+            severity: 'secondary',
+        },
+        {
+            name: 'Tables',
+            links: [{ routerLink: '/demo-table', label: 'Demo Table', severity: 'help' }],
+            severity: 'secondary',
+        },
+        {
+            name: 'Tables Detail',
+            links: [
+                { routerLink: '/users', label: 'Utilisateurs', severity: 'secondary' },
+                { routerLink: '/import-users', label: 'Import Users', severity: 'info' },
+            ],
+            severity: 'secondary',
+        },
+        {
+            name: 'Tables Lazy',
+            links: [
+                { routerLink: '/form-width-table', label: 'Form width table', severity: 'help' },
+                { routerLink: '/form-width-table-more', label: 'Form width table (more)', severity: 'warn' },
+                { routerLink: '/auto-scroll', label: 'Auto-Scroll', severity: 'info' },
+            ],
+            severity: 'secondary',
+        },
+        {
+            name: 'Tables Lazy Complexe',
+            links: [
+                { routerLink: '/lazy-table', label: 'Lazy table', severity: 'contrast' },
+                { routerLink: '/locomotives', label: 'Locomotives', severity: 'success' },
+                { routerLink: '/locomotives-complex', label: 'Locomotives (complexe)', severity: 'warn' },
+            ],
+            severity: 'secondary',
+        },
+        {
+            name: 'Accordions',
+            links: [
+                { routerLink: '/demo-accordion', label: 'Demo Accordion', severity: 'help' },
+                { routerLink: '/demo-accordion-more', label: 'Demo Accordion More', severity: 'contrast' },
+            ],
+            severity: 'secondary',
+        },
+    ];
 
     currentLinks: AppLinks[] = [];
-
-    constructor() {
-        let count: number = 0;
-
-        const groupeHome: AppLinks[] = [{ routerLink: '/', label: 'Accueil', severity: 'primary' }];
-        this.groupedLinks.push({ id: count++, name: 'Accueil', links: groupeHome, severity: 'secondary' });
-
-        const groupeForm: AppLinks[] = [
-            { routerLink: '/demo-form', label: 'Demo Form', severity: 'contrast' },
-            { routerLink: '/demo-split-button', label: 'Demo Split Button', severity: 'warn' },
-            { routerLink: '/demo-form-detail', label: 'Demo Form Detail', severity: 'help' },
-        ];
-        this.groupedLinks.push({ id: count++, name: 'Forms', links: groupeForm, severity: 'secondary' });
-
-        const groupeAutoComplete: AppLinks[] = [
-            { routerLink: '/autocomplete-button-sync', label: 'Autocomplete & Button', severity: 'success' },
-        ];
-        this.groupedLinks.push({
-            id: count++,
-            name: 'AutoCompletes',
-            links: groupeAutoComplete,
-            severity: 'secondary',
-        });
-
-        const groupeTable: AppLinks[] = [{ routerLink: '/demo-table', label: 'Demo Table', severity: 'help' }];
-        this.groupedLinks.push({ id: count++, name: 'Tables', links: groupeTable, severity: 'secondary' });
-
-        const groupeTableDetail: AppLinks[] = [
-            { routerLink: '/users', label: 'Utilisateurs', severity: 'secondary' },
-            { routerLink: '/import-users', label: 'Import Users', severity: 'info' },
-        ];
-        this.groupedLinks.push({ id: count++, name: 'Tables Detail', links: groupeTableDetail, severity: 'secondary' });
-
-        const groupeTableLazy: AppLinks[] = [
-            { routerLink: '/form-width-table', label: 'Form width table', severity: 'help' },
-            { routerLink: '/form-width-table-more', label: 'Form width table (more)', severity: 'warn' },
-            { routerLink: '/auto-scroll', label: 'Auto-Scroll', severity: 'info' },
-        ];
-        this.groupedLinks.push({ id: count++, name: 'Tables Lazy', links: groupeTableLazy, severity: 'secondary' });
-
-        const groupeTableLazyComplexe: AppLinks[] = [
-            { routerLink: '/lazy-table', label: 'Lazy table', severity: 'contrast' },
-            { routerLink: '/locomotives', label: 'Locomotives', severity: 'success' },
-            { routerLink: '/locomotives-complex', label: 'Locomotives (complexe)', severity: 'warn' },
-        ];
-        this.groupedLinks.push({
-            id: count++,
-            name: 'Tables Lazy Complexe',
-            links: groupeTableLazyComplexe,
-            severity: 'secondary',
-        });
-
-        const groupeAccordion: AppLinks[] = [
-            { routerLink: '/demo-accordion', label: 'Demo Accordion', severity: 'help' },
-            { routerLink: '/demo-accordion-more', label: 'Demo Accordion More', severity: 'contrast' },
-        ];
-        this.groupedLinks.push({ id: count++, name: 'Accordions', links: groupeAccordion, severity: 'secondary' });
-
-        const groupeLogs: AppLinks[] = [{ routerLink: '/logs', label: 'Logs', severity: 'primary' }];
-        this.groupedLinks.push({
-            id: count++,
-            name: 'Logs',
-            links: groupeLogs,
-            severity: 'secondary',
-        });
-    }
 
     updateCurrentLinks(links: AppLinks[] | null): void {
         if (links === null) {
@@ -94,11 +87,9 @@ export class App {
 }
 
 interface GroupedAppLinks {
-    id: number;
     name: string;
     links: AppLinks[];
     severity: ButtonSeverity;
-    direct?: boolean;
 }
 interface AppLinks {
     routerLink: string;
