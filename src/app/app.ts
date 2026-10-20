@@ -66,6 +66,7 @@ export class App {
 
 		const groupeAccordion:AppLinks[] = [
 			{ routerLink: '/demo-accordion', label: 'Demo Accordion', severity: 'help' },
+			{ routerLink: '/demo-accordion-more', label: 'Demo Accordion More', severity: 'contrast' },
 		];
 		this.groupedLinks.push({ id: count++, name: 'Accordions', links: groupeAccordion, severity: 'secondary' });
 	}

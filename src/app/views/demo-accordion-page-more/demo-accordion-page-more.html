@@ -1,0 +1,31 @@
+<div class="flex w-full m-0 p-4">
+
+    <p-accordion [(value)]="active"
+        class="w-full">
+        <p-accordion-panel value="info">
+            <p-accordion-header>Informations</p-accordion-header>
+            <p-accordion-content>
+            <p class="m-0">Contenu statique</p>
+            </p-accordion-content>
+        </p-accordion-panel>
+
+        <p-accordion-panel value="form">
+            <p-accordion-header>Formulaire</p-accordion-header>
+            <p-accordion-content>
+            @defer (when active() === 'form') {
+                <form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-col gap-3">
+                <input pInputText formControlName="name" placeholder="Nom" />
+                @if (form.controls.name.touched && form.controls.name.invalid) {
+                    <small class="text-red-500">Nom requis</small>
+                }
+                <input pInputText formControlName="email" placeholder="Email" />
+                <p-button type="submit" label="Envoyer" [disabled]="form.invalid" />
+                </form>
+            } @placeholder {
+                <p>…</p>
+            }
+            </p-accordion-content>
+        </p-accordion-panel>
+    </p-accordion>
+
+</div>

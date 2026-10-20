@@ -83,5 +83,11 @@ export const routes: Routes = [
 			import('./views/demo-accordion-page/demo-accordion-page')
 		.then((m) => m.DemoAccordionPage),
 	},
+	{
+		path: 'demo-accordion-more',
+		loadComponent: () =>
+			import('./views/demo-accordion-page-more/demo-accordion-page-more')
+		.then((m) => m.DemoAccordionPageMore),
+	},
 	{ path: '**', redirectTo: '' },
 ];
