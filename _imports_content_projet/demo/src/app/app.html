@@ -1,0 +1,153 @@
+<main>
+  <section class="console-demo" aria-labelledby="page-title">
+    <div class="box-angular-logo">
+      <img class="angular-logo" src="/angular-logo.svg" alt="Logo Angular" />
+    </div>
+
+    <h1 id="page-title">Console Angular</h1>
+    <p>
+      Découvrez les principaux niveaux de journalisation du navigateur. Les boutons utilisent un service
+      de journalisation qui filtre les messages selon le profil de l'application.
+    </p>
+    <p class="log-profile">
+      Profil actif : <strong>{{ logLevel }}</strong>. En production, seuls les messages d'erreur sont affichés.
+    </p>
+
+    <section class="console-section" aria-labelledby="reference-title">
+      <h2 id="reference-title">Référence des méthodes</h2>
+      <div class="console-methods">
+        <table>
+          <caption>
+            Méthodes disponibles dans la console
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">Méthode</th>
+              <th scope="col">Usage</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>log</code>, <code>info</code>, <code>debug</code></td>
+              <td>Affichent un message d'information.</td>
+            </tr>
+            <tr>
+              <td><code>warn</code>, <code>error</code></td>
+              <td>Signalent respectivement un avertissement ou une erreur.</td>
+            </tr>
+            <tr>
+              <td><code>assert</code></td>
+              <td>Affiche un message si une condition est fausse.</td>
+            </tr>
+            <tr>
+              <td><code>table</code>, <code>dir</code></td>
+              <td>Présentent des données structurées ou un objet.</td>
+            </tr>
+            <tr>
+              <td><code>group</code>, <code>groupEnd</code></td>
+              <td>Regroupent les messages dans une section repliable.</td>
+            </tr>
+            <tr>
+              <td><code>time</code>, <code>timeEnd</code></td>
+              <td>Mesurent la durée d'une opération.</td>
+            </tr>
+            <tr>
+              <td><code>count</code>, <code>trace</code></td>
+              <td>Comptent des appels ou affichent la pile d'exécution.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="console-section" aria-labelledby="standard-logs-title">
+      <h2 id="standard-logs-title">Niveaux de journalisation</h2>
+      <div class="log-actions" aria-label="Actions de journalisation">
+        <button type="button" class="log-button log" (click)="writeLog('log')">console.log</button>
+        <button type="button" class="log-button info" (click)="writeLog('info')">console.info</button>
+        <button type="button" class="log-button warn" (click)="writeLog('warn')">console.warn</button>
+        <button type="button" class="log-button error" (click)="writeLog('error')">console.error</button>
+        <button type="button" class="log-button debug" (click)="writeLog('debug')">console.debug</button>
+      </div>
+    </section>
+
+    <section class="console-section" aria-labelledby="advanced-logs-title">
+      <h2 id="advanced-logs-title">Méthodes avancées</h2>
+      <div class="log-actions" aria-label="Actions de journalisation avancées">
+        <button type="button" class="log-button advanced" (click)="writeAdvancedLog('assert')">
+          console.assert
+        </button>
+        <button type="button" class="log-button advanced" (click)="writeAdvancedLog('table')">
+          console.table
+        </button>
+        <button type="button" class="log-button advanced" (click)="writeAdvancedLog('dir')">
+          console.dir
+        </button>
+        <button type="button" class="log-button advanced" (click)="writeAdvancedLog('group')">
+          console.group
+        </button>
+        <button type="button" class="log-button advanced" (click)="writeAdvancedLog('time')">
+          console.time
+        </button>
+        <button type="button" class="log-button advanced" (click)="writeAdvancedLog('count')">
+          console.count
+        </button>
+        <button type="button" class="log-button advanced" (click)="writeAdvancedLog('trace')">
+          console.trace
+        </button>
+      </div>
+    </section>
+
+    <section class="console-section documentation-guide" aria-labelledby="guide-title">
+      <h2 id="guide-title">Guide de bonnes pratiques</h2>
+      <p>
+        La console est un outil de diagnostic : les messages doivent être utiles sans exposer de données
+        sensibles ni produire de bruit inutile.
+      </p>
+
+      <div class="guide-topic">
+        <h3>Choisir le bon niveau</h3>
+        <ul>
+          <li><code>debug</code> pour les détails de diagnostic pendant le développement.</li>
+          <li><code>log</code> et <code>info</code> pour le suivi du fonctionnement normal.</li>
+          <li><code>warn</code> pour une situation dégradée, et <code>error</code> pour un échec.</li>
+        </ul>
+      </div>
+
+      <div class="guide-topic">
+        <h3>Rendre les messages utiles</h3>
+        <ul>
+          <li>Décrivez l'événement et son contexte, par exemple avec un identifiant non sensible.</li>
+          <li>Utilisez <code>table</code>, <code>dir</code> et <code>group</code> pour organiser les données.</li>
+          <li>Nommez les compteurs et chronomètres afin d'éviter les collisions.</li>
+        </ul>
+      </div>
+
+      <div class="guide-topic">
+        <h3>Préserver la confidentialité et les performances</h3>
+        <ul>
+          <li>Ne journalisez jamais de mot de passe, jeton, cookie ou donnée personnelle.</li>
+          <li>Évitez les grands objets et les messages dans des boucles fréquentes.</li>
+          <li>Limitez les messages de diagnostic à l'environnement de développement.</li>
+        </ul>
+      </div>
+
+      <div class="guide-topic">
+        <h3>Configurer les profils</h3>
+        <ul>
+          <li>Le profil de développement utilise le niveau <code>debug</code> et affiche toutes les sorties.</li>
+          <li>Le profil de production utilise le niveau <code>error</code> et masque les autres messages.</li>
+          <li>Le niveau se configure dans les fichiers d'environnement, sans modifier les boutons.</li>
+        </ul>
+      </div>
+
+      <div class="guide-topic docker-guide">
+        <h3>Production avec Docker</h3>
+        <p>L'image compile Angular puis sert l'application avec Nginx.</p>
+        <pre><code>docker build -t angular-console-demo .
+docker run --rm -p 8080:80 angular-console-demo</code></pre>
+        <p>L'application sera disponible sur <code>http://localhost:8080/</code>.</p>
+      </div>
+    </section>
+  </section>
+</main>
