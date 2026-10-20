@@ -75,13 +75,12 @@ export class App {
         ];
         this.groupedLinks.push({ id: count++, name: 'Accordions', links: groupeAccordion, severity: 'secondary' });
 
-        const groupeLogs: AppLinks[] = [{ routerLink: '/logs', label: 'Logs', severity: 'secondary' }];
+        const groupeLogs: AppLinks[] = [{ routerLink: '/logs', label: 'Logs', severity: 'primary' }];
         this.groupedLinks.push({
             id: count++,
             name: 'Logs',
             links: groupeLogs,
             severity: 'secondary',
-            direct: true,
         });
     }
 
