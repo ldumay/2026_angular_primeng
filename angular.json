@@ -25,12 +25,8 @@
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
-              {
-                "glob": "**/*",
-                "input": "node_modules/cesium/Build/Cesium",
-                "output": "/assets/cesium",
-                "input": "public"
-              }
+              { "glob": "**/*", "input": "public" },
+              { "glob": "**/*", "input": "node_modules/cesium/Build/Cesium", "output": "/assets/cesium" }
             ],
             "styles": [
               "src/styles.scss"
