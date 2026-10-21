@@ -17,16 +17,24 @@ export class CesiumPage {
   ngAfterViewInit(): void {
     this.zone.runOutsideAngular(() => {
       this.viewer = new Cesium.Viewer(this.container.nativeElement, {
-        sceneMode: Cesium.SceneMode.SCENE2D,
-        baseLayerPicker: false,
         imageryProvider: Cesium.createOpenStreetMapImageryProvider({
           url: 'https://a.tile.openstreetmap.org/',
         }),
-        animation: false,
+        baseLayerPicker: false,
+        geocoder: false,            // supprime l'avertissement Bing
         timeline: false,
+        fullscreenButton: true,
+        sceneMode: Cesium.SceneMode.SCENE2D,
+        fullscreenElement: this.container.nativeElement,
+        infoBox: false,             // supprime l'iframe sandboxée et le 404
+        selectionIndicator: false,  // associé à l'InfoBox
+        animation: false,
       });
       this.viewer.camera.setView({
-        destination: Cesium.Rectangle.fromDegrees(-15, 35, 30, 60),
+        // lon, lat, hauteur en mètres
+        // destination: Cesium.Cartesian3.fromDegrees(0, 0, 1),
+        // ouest, sud, est, nord
+        destination: Cesium.Rectangle.fromDegrees(-180, 60, 180, 60),
       });
     });
   }
