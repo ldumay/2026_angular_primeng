@@ -76,6 +76,10 @@ export const routes: Routes = [
     {
         path: 'logs',
         loadComponent: () => import('./views/logs-page/logs-page').then((m) => m.LogsPage),
+    }
+    {
+        path: 'cesium',
+        loadComponent: () => import('./views/cesium-page/cesium-page').then((m) => m.CesiumPage),
     },
     { path: '**', redirectTo: '' },
 ];

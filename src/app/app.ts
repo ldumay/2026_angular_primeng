@@ -21,7 +21,10 @@ export class App {
     readonly angularGroupedLinks: GroupedAppLinks[] = [
         {
             name: 'Essentials',
-            links: [{ routerLink: '/logs', label: 'Logs', severity: 'secondary' }],
+            links: [
+                { routerLink: '/logs', label: 'Logs', severity: 'secondary' },
+                { routerLink: '/cesium', label: 'Cesium', severity: 'secondary' },
+            ],
             severity: 'secondary',
         },
     ];
